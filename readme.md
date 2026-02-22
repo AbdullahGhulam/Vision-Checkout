@@ -15,7 +15,7 @@ We use the **RPC (Retail Product Checkout) Dataset**, which contains:
 * Single-item (exemplar) and multi-item (checkout) images.
 
 ## Tech Stack
-* **Language:** Python 3.10+
+* **Language:** Python 3.11.9 (this Version Specifically to aviod compatibality issues)
 * **Frameworks:** PyTorch 
 * **Libraries:** OpenCV, NumPy, Matplotlib
 * **Version Control:** Git & GitHub
@@ -25,7 +25,7 @@ We use the **RPC (Retail Product Checkout) Dataset**, which contains:
 1.  **Clone the repository:**
     ```bash
     git clone https://github.com/Abdullah-Ghulam/Vision-Checkout
-    cd VisionCheckout-RPC
+    cd VisionCheckout
     ```
 
 2.  **Create a Virtual Environment:**
@@ -42,6 +42,14 @@ We use the **RPC (Retail Product Checkout) Dataset**, which contains:
     ```bash
     pip install -r requirements.txt
     ```
+
+4. ### ✅ Verify Installation
+After installing the requirements,
+run the following script to ensure your environment (Python, PyTorch, and GPU) is configured correctly:
+
+```bash
+python check_setup.py
+```
 
 ## 📂 Project Structure
 ```text
