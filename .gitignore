@@ -1,0 +1,18 @@
+# Environments
+venv/
+.env
+
+# Data & Large Files
+data/
+*.zip
+*.tar.gz
+
+# Python-specific
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS-specific (The "Invisible" Clutter)
+.DS_Store
+Thumbs.db
+.directory
