@@ -16,7 +16,7 @@ We use the **RPC (Retail Product Checkout) Dataset**, which contains:
 
 ## Tech Stack
 * **Language:** Python 3.10+
-* **Frameworks:** PyTorch / TensorFlow (Select one)
+* **Frameworks:** PyTorch 
 * **Libraries:** OpenCV, NumPy, Matplotlib
 * **Version Control:** Git & GitHub
 
