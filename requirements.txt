@@ -1,0 +1,16 @@
+# --- Core Computer Vision & Image Processing ---
+opencv-python
+Pillow
+matplotlib
+numpy
+
+# --- Deep Learning (Here I'm using PyTorch) ---
+torch
+torchvision
+torchaudio
+
+# --- Data Handling & Notebooks ---
+pandas
+scikit-learn
+notebook
+tqdm
