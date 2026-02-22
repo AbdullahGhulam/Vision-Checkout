@@ -46,6 +46,7 @@ We use the **RPC (Retail Product Checkout) Dataset**, which contains:
 ## 📂 Project Structure
 ```text
 ├── data/               # Local dataset (Ignored by Git)
+├── venv/ or .env       # Python Environemnt (Ignore by Git)
 ├── models/             # Saved model weights (.pth or .h5)
 ├── notebooks/          # EDA and prototyping
 ├── src/                # Source code for training and inference
