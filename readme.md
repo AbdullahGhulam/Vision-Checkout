@@ -43,7 +43,7 @@ We use the **RPC (Retail Product Checkout) Dataset**, which contains:
     pip install -r requirements.txt
     ```
 
-4. ### ✅ Verify Installation
+4.  **Verify Installation**  
 After installing the requirements,
 run the following script to ensure your environment (Python, PyTorch, and GPU) is configured correctly:
 
