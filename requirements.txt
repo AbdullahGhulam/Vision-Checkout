@@ -3,6 +3,7 @@ opencv-python
 Pillow
 matplotlib
 numpy
+ultralytics
 
 # --- Deep Learning (Here I'm using PyTorch) ---
 torch
@@ -14,3 +15,4 @@ pandas
 scikit-learn
 notebook
 tqdm
+ipykernel
