@@ -54,17 +54,18 @@ python check_setup.py
 ## Project Structure
 ```text
 Vision_Checkout
-├── data/               # Local dataset (Ignored by Git)
-|   ├──── train2019
-|   ├──── val2019
-|   ├──── test2019
-|   ├──── instances_train2019.json
-|   ├──── instances_val2019.json
-|   ├──── instances_test2019.json
-|
-├── venv/ or .env       # Python Environemnt (Ignore by Git)
-├── models/             # Saved model weights (.pth or .h5)
-├── notebooks/          # EDA and prototyping
-├── src/                # Source code for training and inference
-├── .gitignore          # Files to exclude from Git
-└── README.md
+├── data/               # Local dataset and annotations (Ignored by Git)
+│   ├── instances_test2019.json
+│   ├── instances_train2019.json
+│   ├── instances_val2019.json
+│   ├── test2019/       
+│   ├── train2019/      
+│   └── val2019/        
+├── venv/               # Isolated Python environment (Ignored by Git)
+├── models/             # Saved model weights (.pt, .onnx) and checkpoints
+├── notebooks/          # Jupyter notebooks for EDA and model prototyping
+├── src/                # Core source code 
+├── requirements.txt    # List of project dependencies and libraries
+├── check_setup.py      # Script to verify CUDA and environment configuration
+└── README.md           # Project documentation and setup instructions
+
