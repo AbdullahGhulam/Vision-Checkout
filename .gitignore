@@ -12,7 +12,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# OS-specific (The "Invisible" Clutter)
+# OS-specific 
 .DS_Store
 Thumbs.db
 .directory
+
+#Sub-repo
+.claude/
