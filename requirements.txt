@@ -3,6 +3,7 @@ opencv-python
 Pillow
 matplotlib
 numpy
+ultralytics
 
 # --- Deep Learning (Here I'm using PyTorch) ---
 torch
@@ -14,4 +15,8 @@ pandas
 scikit-learn
 notebook
 tqdm
+<<<<<<< HEAD
 pycocotools #To process COCO annotation
+=======
+ipykernel
+>>>>>>> 9ee05b5818843fb02720d99d0f799302c920f14c
