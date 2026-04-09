@@ -20,7 +20,7 @@ We use the **[RPC (Retail Product Checkout) Dataset](https://rpc-dataset.github.
 * **Libraries:** OpenCV, NumPy, Matplotlib
 * **Version Control:** Git & GitHub
 
-## ⚙️ Setup & Installation
+## Setup & Installation
 
 1.  **Clone the repository:**
     ```bash
@@ -64,8 +64,9 @@ Vision_Checkout
 ├── venv/               # Isolated Python environment (Ignored by Git)
 ├── models/             # Saved model weights (.pt, .onnx) and checkpoints
 ├── notebooks/          # Jupyter notebooks for EDA and model prototyping
+│  └── 01_EDA.ipynb
 ├── src/                # Core source code 
 ├── requirements.txt    # List of project dependencies and libraries
 ├── check_setup.py      # Script to verify CUDA and environment configuration
 └── README.md           # Project documentation and setup instructions
-
+```
