@@ -70,3 +70,14 @@ Vision_Checkout
 ├── check_setup.py      # Script to verify CUDA and environment configuration
 └── README.md           # Project documentation and setup instructions
 ```
+
+## Results & Visualizations
+
+### Bounding Box Detection
+![Bounding Boxes](assests/bounding_boxes.png)
+
+### Data Augmentation Examples
+![Data Augmentation](assests/Augmentation.jpeg)
+
+### Labeled Products
+![Labels](assests/lables.jpg)
