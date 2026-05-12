@@ -1,13 +1,11 @@
 ---
 title: Vision Checkout
 emoji: 🛒
-colorFrom: indigo
-colorTo: orange
-sdk: gradio
-sdk_version: 5.50.0
+colorFrom: blue
+colorTo: green
+sdk: streamlit
 app_file: app.py
 pinned: false
-license: mit
 ---
 
 # VisionCheckout-RPC 
