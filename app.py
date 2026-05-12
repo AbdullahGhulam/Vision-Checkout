@@ -228,6 +228,8 @@ def price_list_markdown(lang):
 CUSTOM_CSS = """
 .gradio-container { max-width: 1280px !important; margin: 0 auto !important; }
 .fillable { max-width: none !important; width: 100% !important; }
+.gradio-container .row { flex-wrap: nowrap !important; }
+.gradio-container .row .column { min-width: 0 !important; }
 .lang-toggle button { min-width: 90px; }
 
 /* RTL mode */
