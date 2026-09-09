@@ -2,7 +2,6 @@
 
 Single-file Gradio app: upload a tray photo, run YOLO detection, generate a receipt.
 """
-import base64
 import random
 from datetime import datetime
 from pathlib import Path
@@ -231,18 +230,16 @@ def price_list_markdown(lang):
 WEB_DIR = BASE_DIR / "web"
 
 
-def _data_uri(path):
-    """Inline an image so the page needs no static-file routing on Spaces.
+def _asset_url(name):
+    """Serve the illustration as a static file.
 
-    Returns "" if the file is missing or is an unresolved Git LFS pointer, so the
-    page degrades to an empty frame instead of embedding garbage.
+    These were inlined as base64 data URIs, which pushed ~740KB into the Gradio
+    config payload and stopped event handlers binding once deployed. Serving
+    them through Gradio's file route keeps the config small.
     """
-    if not path.exists():
+    if not (WEB_DIR / "assets" / name).exists():
         return ""
-    raw = path.read_bytes()
-    if not raw.startswith(b"\x89PNG\r\n\x1a\n"):
-        return ""
-    return "data:image/png;base64," + base64.b64encode(raw).decode()
+    return "/gradio_api/file=web/assets/" + name
 
 
 def load_landing_html():
@@ -251,8 +248,8 @@ def load_landing_html():
         return ""
     return (
         html_path.read_text(encoding="utf-8")
-        .replace("__CART_IMG__", _data_uri(WEB_DIR / "assets" / "illustration-cart.png"))
-        .replace("__PRODUCE_IMG__", _data_uri(WEB_DIR / "assets" / "illustration-trolley-produce.png"))
+        .replace("__CART_IMG__", _asset_url("illustration-cart.png"))
+        .replace("__PRODUCE_IMG__", _asset_url("illustration-trolley-produce.png"))
     )
 
 
@@ -272,14 +269,15 @@ CUSTOM_CSS = """
 
 /* Blush ground everywhere, including the area behind the app. */
 body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
-.gradio-container { max-width: 1200px !important; margin: 0 auto !important;
+.gradio-container { max-width: 1560px !important; margin: 0 auto !important;
   font-family: "Instrument Sans", system-ui, sans-serif !important; }
 .fillable { max-width: none !important; width: 100% !important; }
 .gradio-container .row .column { min-width: 0 !important; }
 
 /* The scanner reads as one cream card sitting on the blush page. */
 #scanner { scroll-margin-top: 16px; background: var(--vc-cream); border-radius: 44px;
-  padding: 48px; margin-top: 24px; }
+  padding: 56px 64px; margin-top: 24px; }
+@media (max-width: 900px) { #scanner { padding: 32px 24px; border-radius: 32px; } }
 #scanner h2 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800;
   letter-spacing: -.03em; font-size: clamp(30px,3.6vw,44px); line-height: 1.05;
   color: var(--vc-forest-deep); margin: 0 0 8px; }
