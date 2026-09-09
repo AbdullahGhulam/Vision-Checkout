@@ -4,68 +4,88 @@
   --blush:#F7DFD9;--cream:#FFF4EF;--forest:#1E5140;--forest-deep:#143A2D;
   --persimmon:#D95F3B;--persimmon-deep:#B7462A;--persimmon-wash:#FBE3D8;
   --mustard:#E0A93B;--mustard-wash:#F6E4BE;--sage:#A9C9B8;--moss:#4C7A66;
-  --radius-pill:999px;--radius-lg:32px;--radius-xl:44px;
+  --radius-pill:999px;--radius-lg:28px;--radius-xl:36px;
   --font-display:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
   --font-sans:"Instrument Sans",system-ui,sans-serif;
   font-family:var(--font-sans);color:var(--forest-deep);
-  max-width:1560px;margin:0 auto;display:flex;flex-direction:column;gap:88px;
+  width:100%;max-width:1840px;margin:0 auto;display:flex;flex-direction:column;gap:44px;
 }
 #vc-landing *{box-sizing:border-box}
 #vc-landing h1,#vc-landing h2,#vc-landing h3{
   font-family:var(--font-display);font-weight:800;letter-spacing:-.03em;margin:0;color:var(--forest-deep)}
-#vc-landing p{margin:0;line-height:1.65}
-#vc-landing .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px 0;flex-wrap:wrap}
-#vc-landing .mark{font-family:var(--font-display);font-weight:800;font-size:23px;letter-spacing:-.035em}
-#vc-landing .navlink{color:var(--forest-deep);text-decoration:none;font-size:15px;font-weight:500;padding:10px 18px;border-radius:var(--radius-pill)}
+#vc-landing p{margin:0;line-height:1.6}
+
+#vc-landing .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px 0;flex-wrap:wrap}
+#vc-landing .mark{font-family:var(--font-display);font-weight:800;font-size:22px;letter-spacing:-.035em}
+#vc-landing .navlink{color:var(--forest-deep);text-decoration:none;font-size:15px;font-weight:500;padding:9px 16px;border-radius:var(--radius-pill)}
 #vc-landing .navlink.solid{background:var(--cream)}
-#vc-landing .hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:24px}
-#vc-landing .hero-copy{background:var(--cream);border-radius:var(--radius-xl);padding:56px;display:flex;
-  flex-direction:column;justify-content:center;gap:24px;position:relative;overflow:hidden;min-height:460px}
-#vc-landing .blob{position:absolute;width:300px;height:300px;background:var(--mustard);opacity:.45;
-  border-radius:58% 42% 47% 53%/45% 55% 45% 55%;right:-120px;top:-100px}
-#vc-landing .hero-copy h1{font-size:clamp(38px,5.2vw,64px);line-height:1;letter-spacing:-.035em;position:relative}
+
+/* Hero: copy is the wider half so the headline never wraps to three lines. */
+#vc-landing .hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:20px}
+#vc-landing .hero-copy{background:var(--cream);border-radius:var(--radius-xl);padding:44px 48px;display:flex;
+  flex-direction:column;justify-content:center;gap:18px;position:relative;overflow:hidden}
+#vc-landing .blob{position:absolute;width:260px;height:260px;background:var(--mustard);opacity:.45;
+  border-radius:58% 42% 47% 53%/45% 55% 45% 55%;right:-100px;top:-90px}
+#vc-landing .hero-copy h1{font-size:clamp(36px,4.2vw,60px);line-height:1.02;letter-spacing:-.035em;position:relative}
 #vc-landing .accent{color:var(--persimmon)}
-#vc-landing .lede{max-width:33ch;color:var(--moss);position:relative}
-#vc-landing .btnrow{display:flex;gap:8px;flex-wrap:wrap;position:relative}
-#vc-landing .btn{border-radius:var(--radius-pill);padding:18px 32px;font-weight:500;font-size:17px;text-decoration:none;display:inline-block}
+#vc-landing .lede{max-width:46ch;color:var(--moss);position:relative;font-size:16px}
+#vc-landing .btnrow{display:flex;gap:8px;flex-wrap:wrap;position:relative;margin-top:4px}
+#vc-landing .btn{border-radius:var(--radius-pill);padding:15px 28px;font-weight:500;font-size:16px;text-decoration:none;display:inline-block}
 #vc-landing .btn.primary{background:var(--forest);color:var(--cream)}
-#vc-landing .btn.ghost{color:var(--forest-deep);border:1px solid #EBCFC6;padding:18px 26px}
-#vc-landing .shot{background:var(--forest);border-radius:var(--radius-xl);min-height:460px;display:flex;
-  flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:40px}
-#vc-landing .frame{width:100%;max-width:460px;aspect-ratio:1/1;border-radius:var(--radius-lg);
+#vc-landing .btn.ghost{color:var(--forest-deep);border:1px solid #EBCFC6;padding:15px 24px}
+
+#vc-landing .shot{background:var(--forest);border-radius:var(--radius-xl);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:28px}
+#vc-landing .frame{width:100%;max-width:400px;aspect-ratio:1/1;border-radius:var(--radius-lg);
   overflow:hidden;background:var(--persimmon-wash);position:relative}
 #vc-landing .frame img{width:100%;height:100%;object-fit:cover;display:block}
-#vc-landing .box{position:absolute;border:2px dotted var(--persimmon);border-radius:23px;pointer-events:none}
+#vc-landing .box{position:absolute;border:2px dotted var(--persimmon);border-radius:20px;pointer-events:none}
 #vc-landing .tag{position:absolute;background:var(--forest-deep);color:var(--cream);border-radius:var(--radius-pill);
-  padding:10px 18px;font-size:14px;font-weight:500;display:flex;gap:10px;align-items:center;white-space:nowrap;
+  padding:7px 13px;font-size:12.5px;font-weight:500;display:flex;gap:8px;align-items:center;white-space:nowrap;
   box-shadow:0 0 0 1px rgba(255,244,239,.22)}
 #vc-landing .num{color:var(--sage);font-weight:600;font-variant-numeric:tabular-nums}
 #vc-landing .total{background:var(--persimmon);color:var(--cream);border-radius:var(--radius-pill);
-  padding:12px 22px;font-size:15px;font-weight:500;display:flex;gap:12px;align-items:center}
-#vc-landing .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
-#vc-landing .step{background:var(--cream);border-radius:var(--radius-lg);padding:28px;display:flex;flex-direction:column;gap:8px}
-#vc-landing .stepnum{width:44px;height:44px;border-radius:var(--radius-pill);background:var(--persimmon-wash);
-  color:var(--persimmon-deep);display:inline-flex;align-items:center;justify-content:center;font-weight:600;
-  font-variant-numeric:tabular-nums;margin-bottom:8px}
-#vc-landing .step h3{font-size:26px;line-height:1.25;letter-spacing:-.02em}
-#vc-landing .step p{font-size:15px;line-height:1.6;color:var(--moss)}
-#vc-landing .sec-h{font-size:clamp(30px,3.6vw,44px);line-height:1.05}
-#vc-landing .trolley{background:var(--mustard-wash);border-radius:var(--radius-xl);padding:56px;display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px;align-items:center}
-#vc-landing .chips{display:flex;flex-wrap:wrap;gap:8px}
+  padding:10px 20px;font-size:14px;font-weight:500;display:flex;gap:10px;align-items:center}
+
+/* How it works: one line, three steps, arrows between. Nothing more. */
+#vc-landing .flow{background:var(--cream);border-radius:var(--radius-xl);padding:28px 40px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+#vc-landing .flow h2{font-size:20px;letter-spacing:-.02em;white-space:nowrap;margin-right:8px}
+#vc-landing .flowsteps{display:flex;align-items:center;gap:14px;flex-wrap:wrap;flex:1;justify-content:flex-end}
+#vc-landing .fstep{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:500;white-space:nowrap}
+#vc-landing .fnum{width:30px;height:30px;flex:none;border-radius:var(--radius-pill);background:var(--persimmon-wash);
+  color:var(--persimmon-deep);display:inline-flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+#vc-landing .arrow{color:var(--persimmon);font-size:18px;line-height:1}
+
+/* What it reads: tight two-column, short copy, image carries the section. */
+#vc-landing .trolley{background:var(--mustard-wash);border-radius:var(--radius-xl);padding:36px 40px;display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:36px;align-items:center}
+#vc-landing .trolley h2{font-size:clamp(26px,2.4vw,34px);line-height:1.1}
+#vc-landing .trolley p{color:var(--moss);font-size:16px;max-width:52ch}
+#vc-landing .chips{display:flex;flex-wrap:wrap;gap:7px}
 #vc-landing .chip{background:var(--persimmon-wash);color:var(--persimmon-deep);border-radius:var(--radius-pill);
-  padding:10px 18px;font-size:14px;font-weight:500}
-#vc-landing .crop{width:100%;aspect-ratio:5/4;max-height:420px;border-radius:var(--radius-lg);overflow:hidden;background:var(--cream)}
+  padding:7px 14px;font-size:13.5px;font-weight:500}
+#vc-landing .crop{width:100%;aspect-ratio:5/4;max-height:300px;border-radius:var(--radius-lg);overflow:hidden;background:var(--cream)}
 #vc-landing .crop img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
-#vc-landing .closer{background:var(--forest);border-radius:var(--radius-xl);padding:56px;display:flex;
-  flex-direction:column;align-items:center;gap:24px;text-align:center}
-#vc-landing .closer h2{color:var(--cream);max-width:20ch}
-#vc-landing .closer p{color:#BCD6C8;max-width:42ch}
-#vc-landing .btn.cta{background:var(--persimmon);color:var(--cream);padding:18px 34px}
-#vc-landing .foot{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;
-  padding:40px 0 8px;color:var(--moss);font-size:13px}
+
+#vc-landing .closer{background:var(--forest);border-radius:var(--radius-xl);padding:36px 40px;display:flex;
+  align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+#vc-landing .closer h2{color:var(--cream);font-size:clamp(24px,2.2vw,32px);line-height:1.1;max-width:22ch}
+#vc-landing .btn.cta{background:var(--persimmon);color:var(--cream);padding:15px 30px}
+#vc-landing .foot{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;
+  padding:4px 0 0;color:var(--moss);font-size:13px}
 #vc-landing .foot a{color:inherit}
-@media(max-width:760px){#vc-landing{gap:56px}#vc-landing .hero-copy,#vc-landing .trolley,#vc-landing .closer{padding:32px}}
+
+@media(max-width:1000px){
+  #vc-landing .hero,#vc-landing .trolley{grid-template-columns:1fr}
+  #vc-landing .flow{flex-direction:column;align-items:flex-start}
+  #vc-landing .flowsteps{justify-content:flex-start}
+}
+@media(max-width:760px){
+  #vc-landing{gap:32px}
+  #vc-landing .hero-copy,#vc-landing .trolley,#vc-landing .closer,#vc-landing .flow{padding:26px 22px}
+}
 </style>
 
 <div class="nav">
@@ -80,7 +100,7 @@
 <section class="hero">
   <div class="hero-copy">
     <div class="blob"></div>
-    <h1>Picture the<br>cart<br><span class="accent">We do the rest</span></h1>
+    <h1>Picture the cart.<br><span class="accent">We do the rest.</span></h1>
     <p class="lede">Vision Checkout reads the whole cart at once. No scanning one item at a time, no queue, no unpacking at the till.</p>
     <div class="btnrow">
       <a class="btn primary" href="#scanner">Try a scan</a>
@@ -106,22 +126,21 @@
   </div>
 </section>
 
-<section id="how" style="display:flex;flex-direction:column;gap:40px">
-  <h2 class="sec-h" style="max-width:18ch">Three steps, and one of them is shopping.</h2>
-  <div class="steps">
-    <div class="step"><span class="stepnum">01</span><h3>Fill the cart</h3>
-      <p>Shop the way you already do. Nothing needs to be arranged, faced up or unpacked.</p></div>
-    <div class="step"><span class="stepnum">02</span><h3>Take one photo</h3>
-      <p>At the till, or from your phone. One frame is enough for the whole cart.</p></div>
-    <div class="step"><span class="stepnum">03</span><h3>Pay and go</h3>
-      <p>Every product is found, counted and priced. Check the list, tap pay, walk out.</p></div>
+<section id="how" class="flow">
+  <h2>How it works</h2>
+  <div class="flowsteps">
+    <span class="fstep"><span class="fnum">01</span>Shop as normal</span>
+    <span class="arrow">&rarr;</span>
+    <span class="fstep"><span class="fnum">02</span>Picture the cart</span>
+    <span class="arrow">&rarr;</span>
+    <span class="fstep"><span class="fnum">03</span>Get the receipt</span>
   </div>
 </section>
 
 <section id="trolley" class="trolley">
-  <div style="display:flex;flex-direction:column;gap:24px">
-    <h2 class="sec-h" style="max-width:16ch">Loose produce included.</h2>
-    <p style="max-width:34ch;color:var(--moss)">Barcodes are the easy part. The model reads the things that usually hold up a queue — bagged fruit, bunched herbs, bakery items, anything without a label.</p>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <h2>Loose produce included.</h2>
+    <p>Barcodes are the easy part. The model reads what usually holds up a queue — bagged fruit, bunched herbs, bakery items, anything without a label.</p>
     <div class="chips">
       <span class="chip">Lettuce</span><span class="chip">Broccoli</span><span class="chip">Aubergine</span>
       <span class="chip">Carrot</span><span class="chip">Tomatoes</span><span class="chip">Leek</span>
@@ -131,8 +150,7 @@
 </section>
 
 <section class="closer">
-  <h2 class="sec-h">Put the cart down. We will ring it up.</h2>
-  <p>Point a camera at a cart and see what comes back.</p>
+  <h2>Put the cart down. We will ring it up.</h2>
   <a class="btn cta" href="#scanner">Scan a cart</a>
 </section>
 

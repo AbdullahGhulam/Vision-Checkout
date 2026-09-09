@@ -269,14 +269,17 @@ CUSTOM_CSS = """
 
 /* Blush ground everywhere, including the area behind the app. */
 body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
-.gradio-container { max-width: 1560px !important; margin: 0 auto !important;
+/* Gradio's container is flex:1 1 auto inside a flex parent, so it collapses to
+   content width. Force it to fill before max-width can do anything. */
+.gradio-container { max-width: 1840px !important; width: 100% !important;
+  flex: 1 1 100% !important; margin: 0 auto !important;
   font-family: "Instrument Sans", system-ui, sans-serif !important; }
-.fillable { max-width: none !important; width: 100% !important; }
+.fillable, main.app { max-width: none !important; width: 100% !important; }
 .gradio-container .row .column { min-width: 0 !important; }
 
 /* The scanner reads as one cream card sitting on the blush page. */
-#scanner { scroll-margin-top: 16px; background: var(--vc-cream); border-radius: 44px;
-  padding: 56px 64px; margin-top: 24px; }
+#scanner { scroll-margin-top: 16px; background: var(--vc-cream); border-radius: 36px;
+  padding: 40px 44px; margin-top: 8px; }
 @media (max-width: 900px) { #scanner { padding: 32px 24px; border-radius: 32px; } }
 #scanner h2 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800;
   letter-spacing: -.03em; font-size: clamp(30px,3.6vw,44px); line-height: 1.05;
