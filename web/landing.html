@@ -1,0 +1,143 @@
+<div id="vc-landing">
+<style>
+#vc-landing{
+  --blush:#F7DFD9;--cream:#FFF4EF;--forest:#1E5140;--forest-deep:#143A2D;
+  --persimmon:#D95F3B;--persimmon-deep:#B7462A;--persimmon-wash:#FBE3D8;
+  --mustard:#E0A93B;--mustard-wash:#F6E4BE;--sage:#A9C9B8;--moss:#4C7A66;
+  --radius-pill:999px;--radius-lg:32px;--radius-xl:44px;
+  --font-display:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+  --font-sans:"Instrument Sans",system-ui,sans-serif;
+  font-family:var(--font-sans);color:var(--forest-deep);
+  max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:88px;
+}
+#vc-landing *{box-sizing:border-box}
+#vc-landing h1,#vc-landing h2,#vc-landing h3{
+  font-family:var(--font-display);font-weight:800;letter-spacing:-.03em;margin:0;color:var(--forest-deep)}
+#vc-landing p{margin:0;line-height:1.65}
+#vc-landing .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px 0;flex-wrap:wrap}
+#vc-landing .mark{font-family:var(--font-display);font-weight:800;font-size:23px;letter-spacing:-.035em}
+#vc-landing .navlink{color:var(--forest-deep);text-decoration:none;font-size:15px;font-weight:500;padding:10px 18px;border-radius:var(--radius-pill)}
+#vc-landing .navlink.solid{background:var(--cream)}
+#vc-landing .hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+#vc-landing .hero-copy{background:var(--cream);border-radius:var(--radius-xl);padding:56px;display:flex;
+  flex-direction:column;justify-content:center;gap:24px;position:relative;overflow:hidden;min-height:460px}
+#vc-landing .blob{position:absolute;width:300px;height:300px;background:var(--mustard);opacity:.45;
+  border-radius:58% 42% 47% 53%/45% 55% 45% 55%;right:-120px;top:-100px}
+#vc-landing .hero-copy h1{font-size:clamp(38px,5.2vw,64px);line-height:1;letter-spacing:-.035em;position:relative}
+#vc-landing .accent{color:var(--persimmon)}
+#vc-landing .lede{max-width:33ch;color:var(--moss);position:relative}
+#vc-landing .btnrow{display:flex;gap:8px;flex-wrap:wrap;position:relative}
+#vc-landing .btn{border-radius:var(--radius-pill);padding:18px 32px;font-weight:500;font-size:17px;text-decoration:none;display:inline-block}
+#vc-landing .btn.primary{background:var(--forest);color:var(--cream)}
+#vc-landing .btn.ghost{color:var(--forest-deep);border:1px solid #EBCFC6;padding:18px 26px}
+#vc-landing .shot{background:var(--forest);border-radius:var(--radius-xl);min-height:460px;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:40px}
+#vc-landing .frame{width:100%;max-width:380px;aspect-ratio:1/1;border-radius:var(--radius-lg);
+  overflow:hidden;background:var(--persimmon-wash);position:relative}
+#vc-landing .frame img{width:100%;height:100%;object-fit:cover;display:block}
+#vc-landing .box{position:absolute;border:2px dotted var(--persimmon);border-radius:23px;pointer-events:none}
+#vc-landing .tag{position:absolute;background:var(--forest-deep);color:var(--cream);border-radius:var(--radius-pill);
+  padding:10px 18px;font-size:14px;font-weight:500;display:flex;gap:10px;align-items:center;white-space:nowrap;
+  box-shadow:0 0 0 1px rgba(255,244,239,.22)}
+#vc-landing .num{color:var(--sage);font-weight:600;font-variant-numeric:tabular-nums}
+#vc-landing .total{background:var(--persimmon);color:var(--cream);border-radius:var(--radius-pill);
+  padding:12px 22px;font-size:15px;font-weight:500;display:flex;gap:12px;align-items:center}
+#vc-landing .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+#vc-landing .step{background:var(--cream);border-radius:var(--radius-lg);padding:28px;display:flex;flex-direction:column;gap:8px}
+#vc-landing .stepnum{width:44px;height:44px;border-radius:var(--radius-pill);background:var(--persimmon-wash);
+  color:var(--persimmon-deep);display:inline-flex;align-items:center;justify-content:center;font-weight:600;
+  font-variant-numeric:tabular-nums;margin-bottom:8px}
+#vc-landing .step h3{font-size:26px;line-height:1.25;letter-spacing:-.02em}
+#vc-landing .step p{font-size:15px;line-height:1.6;color:var(--moss)}
+#vc-landing .sec-h{font-size:clamp(30px,3.6vw,44px);line-height:1.05}
+#vc-landing .trolley{background:var(--mustard-wash);border-radius:var(--radius-xl);padding:56px;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px;align-items:center}
+#vc-landing .chips{display:flex;flex-wrap:wrap;gap:8px}
+#vc-landing .chip{background:var(--persimmon-wash);color:var(--persimmon-deep);border-radius:var(--radius-pill);
+  padding:10px 18px;font-size:14px;font-weight:500}
+#vc-landing .crop{width:100%;aspect-ratio:5/4;max-height:420px;border-radius:var(--radius-lg);overflow:hidden;background:var(--cream)}
+#vc-landing .crop img{width:100%;height:100%;object-fit:cover;object-position:72% 42%;display:block}
+#vc-landing .closer{background:var(--forest);border-radius:var(--radius-xl);padding:56px;display:flex;
+  flex-direction:column;align-items:center;gap:24px;text-align:center}
+#vc-landing .closer h2{color:var(--cream);max-width:20ch}
+#vc-landing .closer p{color:#BCD6C8;max-width:42ch}
+#vc-landing .btn.cta{background:var(--persimmon);color:var(--cream);padding:18px 34px}
+#vc-landing .foot{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;
+  padding:40px 0 8px;color:var(--moss);font-size:13px}
+#vc-landing .foot a{color:inherit}
+@media(max-width:760px){#vc-landing{gap:56px}#vc-landing .hero-copy,#vc-landing .trolley,#vc-landing .closer{padding:32px}}
+</style>
+
+<div class="nav">
+  <span class="mark">Vision Checkout</span>
+  <span style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
+    <a class="navlink" href="#how">How it works</a>
+    <a class="navlink" href="#trolley">What it reads</a>
+    <a class="navlink solid" href="#scanner">Open the scanner</a>
+  </span>
+</div>
+
+<section class="hero">
+  <div class="hero-copy">
+    <div class="blob"></div>
+    <h1>Picture the<br>cart<br><span class="accent">We do the rest</span></h1>
+    <p class="lede">Vision Checkout reads the whole cart at once. No scanning one item at a time, no queue, no unpacking at the till.</p>
+    <div class="btnrow">
+      <a class="btn primary" href="#scanner">Try a scan</a>
+      <a class="btn ghost" href="#how">See how it works</a>
+    </div>
+  </div>
+
+  <div class="shot">
+    <div class="frame">
+      <img src="__CART_IMG__" alt="Illustration of a shopping cart filled with groceries">
+      <div class="box" style="left:14%;top:23%;width:17%;height:18%"></div>
+      <div class="box" style="left:56%;top:12%;width:11%;height:22%"></div>
+      <div class="box" style="left:35%;top:40%;width:14%;height:23%"></div>
+      <div class="box" style="left:33%;top:19%;width:14%;height:23%"></div>
+      <div class="box" style="left:46%;top:47%;width:11%;height:14%"></div>
+      <span class="tag" style="left:2%;top:13%">Carrots <span class="num">×2</span></span>
+      <span class="tag" style="left:4%;top:43%">Bread <span class="num">×1</span></span>
+      <span class="tag" style="right:4%;top:36%">Olive oil <span class="num">×1</span></span>
+      <span class="tag" style="left:28%;top:65%">Milk <span class="num">×1</span></span>
+      <span class="tag" style="right:4%;top:63%">Jam <span class="num">×1</span></span>
+    </div>
+    <span class="total">Total <span class="num" style="color:var(--cream)">SAR 84.20</span></span>
+  </div>
+</section>
+
+<section id="how" style="display:flex;flex-direction:column;gap:40px">
+  <h2 class="sec-h" style="max-width:18ch">Three steps, and one of them is shopping.</h2>
+  <div class="steps">
+    <div class="step"><span class="stepnum">01</span><h3>Fill the cart</h3>
+      <p>Shop the way you already do. Nothing needs to be arranged, faced up or unpacked.</p></div>
+    <div class="step"><span class="stepnum">02</span><h3>Take one photo</h3>
+      <p>At the till, or from your phone. One frame is enough for the whole cart.</p></div>
+    <div class="step"><span class="stepnum">03</span><h3>Pay and go</h3>
+      <p>Every product is found, counted and priced. Check the list, tap pay, walk out.</p></div>
+  </div>
+</section>
+
+<section id="trolley" class="trolley">
+  <div style="display:flex;flex-direction:column;gap:24px">
+    <h2 class="sec-h" style="max-width:16ch">Loose produce included.</h2>
+    <p style="max-width:34ch;color:var(--moss)">Barcodes are the easy part. The model reads the things that usually hold up a queue — bagged fruit, bunched herbs, bakery items, anything without a label.</p>
+    <div class="chips">
+      <span class="chip">Lettuce</span><span class="chip">Broccoli</span><span class="chip">Aubergine</span>
+      <span class="chip">Carrot</span><span class="chip">Tomatoes</span><span class="chip">Leek</span>
+    </div>
+  </div>
+  <div class="crop"><img src="__PRODUCE_IMG__" alt="Flat illustration of fresh produce around a shopping cart"></div>
+</section>
+
+<section class="closer">
+  <h2 class="sec-h">Put the cart down. We will ring it up.</h2>
+  <p>Point a camera at a cart and see what comes back.</p>
+  <a class="btn cta" href="#scanner">Scan a cart</a>
+</section>
+
+<div class="foot">
+  <span>Vision Checkout — alpha</span>
+  <span>Illustrations via <a href="https://www.vecteezy.com">Vecteezy</a> and iconicbestiary / <a href="https://www.freepik.com">Freepik</a></span>
+</div>
+</div>

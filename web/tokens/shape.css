@@ -1,0 +1,18 @@
+:root{
+  /* Everything is a pill or a capsule. Nothing in this system has a square corner. */
+  --radius-pill:999px;    /* buttons, chips, tags, inputs, avatars */
+  --radius-sm:16px;       /* small inner blocks, list rows */
+  --radius-lg:32px;       /* cards, panels, image frames */
+  --radius-xl:44px;       /* hero blocks and full-width sections */
+  --radius-none:var(--radius-sm); /* legacy alias — no true square corners remain */
+
+  --border-width-hairline:1px;
+  --border-width-box:3px;
+  --focus-ring-width:2px;
+  --focus-ring-offset:2px;
+  --icon-stroke:1.75px;
+
+  /* One soft, warm shadow. Used only where a surface genuinely sits above another. */
+  --shadow-soft:0 12px 32px -18px rgba(30,81,64,.35);
+  --shadow-none:none;
+}

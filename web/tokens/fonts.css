@@ -1,0 +1,5 @@
+/* SUBSTITUTION NOTE: no font binaries supplied. Loaded from Google Fonts.
+   Bricolage Grotesque — display voice, soft-cornered grotesque with optical sizing.
+   Instrument Sans — everything else, including numerals (tabular via font-variant-numeric).
+   IBM Plex Sans Arabic — Arabic only. */
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap");

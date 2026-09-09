@@ -1,0 +1,8 @@
+:root{
+  --duration-state:160ms; /* @kind other */
+  --duration-surface:280ms; /* @kind other */
+  --easing:cubic-bezier(.22,.61,.36,1); /* @kind other */
+  --transition-state:var(--duration-state) var(--easing); /* @kind other */
+  --transition-surface:var(--duration-surface) var(--easing); /* @kind other */
+  --transition-readout:none; /* @kind other */
+}

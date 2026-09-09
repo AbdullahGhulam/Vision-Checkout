@@ -1,0 +1,55 @@
+:root{
+  /* --- Anchors: the Blush Aisle palette --- */
+  --blush:#F7DFD9;          /* page ground */
+  --cream:#FFF4EF;          /* raised surfaces */
+  --forest:#1E5140;         /* the structural dark */
+  --forest-deep:#143A2D;    /* ink */
+  --forest-mid:#2C6450;     /* fills inside forest fields */
+  --persimmon:#D95F3B;      /* the accent and the action */
+  --persimmon-deep:#B7462A; /* hover / pressed */
+  --persimmon-wash:#FBE3D8; /* tinted fill */
+  --mustard:#E0A93B;
+  --mustard-wash:#F6E4BE;
+  --dusty-blue:#8FA5C0;
+  --sage:#A9C9B8;
+  --moss:#4C7A66;           /* muted text on light */
+  --alarm:#8C2F39;
+
+  /* --- Semantic aliases --- */
+  --color-primary:var(--persimmon);
+  --color-primary-strong:var(--persimmon);
+  --color-primary-hover:var(--persimmon-deep);
+  --color-primary-subtle:var(--persimmon-wash);
+  --color-secondary:var(--forest);
+  --color-error:var(--alarm);
+
+  --surface-page:var(--blush);
+  --surface-card:var(--cream);
+  --surface-raised:var(--cream);
+  --surface-warm:var(--mustard-wash);
+  --surface-cool:var(--sage);
+  --surface-band:var(--forest);
+  --surface-hero:var(--forest);
+  --surface-inset:var(--forest-mid);
+
+  --text-body:var(--forest-deep);
+  --text-heading:var(--forest-deep);
+  --text-muted:var(--moss);
+  --text-on-primary:var(--cream);
+  --text-on-band:var(--cream);
+  --text-on-hero:var(--cream);
+  --text-on-hero-muted:#BCD6C8;
+  --text-chip:var(--persimmon-deep);
+  --text-error:var(--alarm);
+
+  --border-hairline:#EBCFC6;
+  --border-on-dark:rgba(255,244,239,.28);
+  --border-focus:var(--persimmon-deep);
+  --detection-box:var(--persimmon);
+
+  /* Legacy aliases so components authored against the previous palette keep working. */
+  --peach:var(--persimmon);--peach-strong:var(--persimmon);--peach-pressed:var(--persimmon-deep);
+  --peach-wash:var(--persimmon-wash);--slate:var(--forest);--slate-deep:var(--forest-deep);
+  --slate-muted:var(--moss);--beige:var(--mustard-wash);--sky:var(--sage);
+  --alabaster:var(--blush);--card:var(--cream);--paper:var(--cream);--hairline:var(--border-hairline);
+}

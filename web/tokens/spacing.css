@@ -1,0 +1,18 @@
+:root{
+  --space-base:8px;
+  --space-xs:4px;--space-sm:8px;--space-md:16px;--space-lg:24px;
+  --space-xl:40px;--space-2xl:64px;--space-3xl:104px;
+  --gutter:20px;
+  --page-margin:40px;
+  --measure:60ch;
+
+  --control-height-lg:58px;
+  --control-height-md:46px;
+  --pad-button-lg:32px;
+  --pad-button-md:20px;
+  --pad-card:28px;
+  --pad-panel:32px;
+  --pad-band:20px;
+  --pad-hero:56px;
+  --pad-chip:14px;
+}
