@@ -307,6 +307,27 @@ body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
 #scanner .prose, #scanner .md { color: var(--vc-forest-deep) !important; }
 #scanner a { color: var(--vc-persimmon-deep); }
 .lang-toggle button { min-width: 90px; }
+/* The design system is light-only. Neutralise Gradio dark mode in CSS rather
+   than redirecting the page — a redirect loops and kills every event. */
+.dark, .dark body, .dark .gradio-container {
+  --body-background-fill: var(--vc-blush) !important;
+  --background-fill-primary: #fff !important;
+  --background-fill-secondary: var(--vc-cream) !important;
+  --block-background-fill: #fff !important;
+  --border-color-primary: var(--vc-hairline) !important;
+  --body-text-color: var(--vc-forest-deep) !important;
+  --body-text-color-subdued: var(--vc-moss) !important;
+  --input-background-fill: #fff !important;
+  --block-label-text-color: var(--vc-forest-deep) !important;
+  --block-title-text-color: var(--vc-forest-deep) !important;
+  color-scheme: light !important;
+}
+.dark #scanner input, .dark #scanner textarea {
+  background: #fff !important; color: var(--vc-forest-deep) !important; }
+.dark #scanner .block { background: #fff !important; }
+.dark #scanner, .dark #scanner .prose, .dark #scanner label,
+.dark #scanner .md { color: var(--vc-forest-deep) !important; }
+
 #scanner label > span, #scanner .block > label > span,
 #scanner span[data-testid="block-info"], #scanner .gr-input-label {
   background: transparent !important; color: var(--vc-forest-deep) !important;
@@ -359,6 +380,25 @@ def toggle_lang(lang):
     )
 
 
+def open_sample(path):
+    """Return a decoded image, not a path.
+
+    gr.Image(type="pil") can be handed a filepath, but Gradio then has to serve
+    that absolute path back to the browser, which fails silently on Spaces.
+    Decoding here sidesteps the whole allowed-paths question.
+    """
+    try:
+        return ImageOps.exif_transpose(Image.open(path)).convert("RGB")
+    except (OSError, ValueError):
+        return gr.update()
+
+
+def load_random_sample():
+    """One button, one handler — the demo path that cannot break."""
+    picks = pick_random_samples(1)
+    return open_sample(picks[0]) if picks else gr.update()
+
+
 def shuffle_samples():
     picks = pick_random_samples(3)
     return gr.update(samples=[[p] for p in picks]), picks
@@ -370,7 +410,7 @@ def choose_sample(samples, evt: gr.SelectData):
     if isinstance(idx, (list, tuple)):
         idx = idx[0]
     try:
-        return samples[int(idx)]
+        return open_sample(samples[int(idx)])
     except (TypeError, ValueError, IndexError):
         return gr.update()
 
@@ -382,17 +422,7 @@ VC_THEME = gr.themes.Soft(
     font=[gr.themes.GoogleFont("Instrument Sans"), "system-ui", "sans-serif"],
 )
 
-FORCE_LIGHT_JS = """
-() => {
-  const url = new URL(window.location);
-  if (url.searchParams.get('__theme') !== 'light') {
-    url.searchParams.set('__theme', 'light');
-    window.location.replace(url.href);
-  }
-}
-"""
-
-with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME, js=FORCE_LIGHT_JS,
+with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME,
                title="Vision Checkout", fill_width=True) as demo:
     lang_state = gr.State("en")
     samples_state = gr.State(pick_random_samples(3))
@@ -442,7 +472,10 @@ with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME, js=FORCE_LIGHT_JS,
                     label=T["en"]["samples"],
                     samples_per_page=3,
                 )
-                shuffle_btn = gr.Button(T["en"]["shuffle"], size="sm")
+                with gr.Row():
+                    random_btn = gr.Button("Load a random sample", size="sm",
+                                           variant="secondary")
+                    shuffle_btn = gr.Button(T["en"]["shuffle"], size="sm")
 
     # ── wiring ──
     scan_btn.click(
@@ -463,6 +496,9 @@ with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME, js=FORCE_LIGHT_JS,
 
     samples_gallery.select(choose_sample, inputs=[samples_state], outputs=[image_in])
 
+    random_btn.click(load_random_sample, outputs=[image_in])
+
 
 if __name__ == "__main__":
-    demo.launch(server_name="0.0.0.0", server_port=7860)
+    demo.launch(server_name="0.0.0.0", server_port=7860,
+                allowed_paths=[str(TEST_IMAGES_DIR), str(WEB_DIR)])
