@@ -124,24 +124,24 @@ def build_cart(detections):
 # it outside the printable flow and produced blank pages. Instead, clone the
 # receipt into an isolated iframe and print that.
 PRINT_JS = (
-    "var r=document.getElementById('vc-receipt');"
-    "if(r){"
+    "var inv=document.getElementById('vc-invoice');"
+    "if(inv){"
     "var w=document.getElementById('vc-receipt-wrap');"
     "var dir=(w&&w.getAttribute('dir'))||'ltr';"
-    "var s=document.getElementById('vc-rstyle');"
+    "var s=document.getElementById('vc-print-style');"
     "var f=document.createElement('iframe');"
     # A real page-sized layout box, parked off-screen. A 1px iframe makes the
-    # receipt lay out at 1px wide and print squashed.
+    # invoice lay out at 1px wide and print squashed.
     "f.setAttribute('style','position:fixed;left:-10000px;top:0;width:794px;"
     "height:1123px;border:0;');"
     "document.body.appendChild(f);"
     "var d=f.contentWindow.document;d.open();"
     "d.write('<!doctype html><html><head><meta charset=utf-8>'"
     "+(s?s.outerHTML:'')"
-    "+'<style>@page{margin:14mm}body{margin:0;background:#fff}"
-    "#vc-receipt{max-width:520px;margin:0 auto;border:none}"
-    "#vc-print-btn{display:none}</style></head><body dir='+dir+'>'"
-    "+r.outerHTML+'</body></html>');"
+    "+'<style>@page{margin:12mm}html,body{margin:0;background:#fff;"
+    "-webkit-print-color-adjust:exact;print-color-adjust:exact}"
+    "#vc-invoice{display:block}</style></head><body dir='+dir+'>'"
+    "+inv.outerHTML+'</body></html>');"
     "d.close();"
     "var L=d.createElement('link');L.rel='stylesheet';"
     "L.href='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:"
@@ -150,7 +150,7 @@ PRINT_JS = (
     "setTimeout(function(){"
     "try{f.contentWindow.focus();f.contentWindow.print();}catch(e){window.print();}"
     "setTimeout(function(){if(f.parentNode){f.parentNode.removeChild(f);}},1500);"
-    "},600);"
+    "},700);"
     "}"
 )
 
@@ -179,6 +179,18 @@ def render_receipt(cart, store_name, show_vat, lang):
         if show_vat else ""
     )
 
+    inv_rows = "".join(
+        f'<tr><td>{label(it["info"])}</td>'
+        f'<td class="n">{it["count"]}</td>'
+        f'<td class="n">{it["info"]["price"]:.2f}</td>'
+        f'<td class="n">{it["info"]["price"] * it["count"]:.2f}</td></tr>'
+        for it in cart.values()
+    )
+    inv_vat = (
+        f'<div class="trow"><span>{txt["vat_label"]}</span>'
+        f'<span>{vat:.2f}</span></div>' if show_vat else ""
+    )
+
     return f"""
 <div id="vc-receipt-wrap" dir="{direction}">
 <style id="vc-rstyle">
@@ -205,10 +217,56 @@ def render_receipt(cart, store_name, show_vat, lang):
     font-variant-numeric:tabular-nums; letter-spacing:-.01em; }}
 #vc-print-btn {{ margin-top:16px; padding:13px 26px; background:transparent;
     color:#143A2D; border:1px solid #EBCFC6; border-radius:999px; font-weight:500;
-    font-size:15px; cursor:pointer; font-family:inherit;
-    transition:background 160ms cubic-bezier(.22,.61,.36,1); }}
+    font-size:15px; cursor:pointer; font-family:inherit; }}
 #vc-print-btn:hover {{ background:#FBE3D8; }}
 </style>
+
+<style id="vc-print-style">
+/* The printed artefact is a proper invoice, not the on-screen card. Every rule
+   is scoped to #vc-invoice, which is hidden on screen and only ever rendered
+   inside the print iframe. print-color-adjust keeps the fills — without it
+   browsers drop every background and the invoice prints as bare text. */
+#vc-invoice {{ display:none; }}
+#vc-invoice, #vc-invoice * {{ box-sizing:border-box;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact; }}
+#vc-invoice {{ font-family:'Instrument Sans',system-ui,sans-serif; color:#143A2D;
+    background:#FFF4EF; border:1px solid #E4CFC5; padding:34px 38px 26px;
+    max-width:640px; margin:0 auto; }}
+#vc-invoice .ihead {{ display:flex; justify-content:space-between;
+    align-items:flex-start; gap:20px; border-bottom:2px solid #143A2D;
+    padding-bottom:16px; }}
+#vc-invoice .istore {{ font-family:'Bricolage Grotesque','Instrument Sans',sans-serif;
+    font-size:30px; font-weight:800; letter-spacing:-.03em; line-height:1.05; }}
+#vc-invoice .itag {{ font-size:12px; color:#4C7A66; margin-top:4px; }}
+#vc-invoice .ititle {{ font-size:13px; font-weight:600; letter-spacing:.16em;
+    text-transform:uppercase; color:#B7462A; white-space:nowrap; padding-top:6px; }}
+#vc-invoice .imeta {{ display:flex; gap:34px; margin:16px 0 22px; font-size:12.5px; }}
+#vc-invoice .imeta span {{ color:#4C7A66; display:block; margin-bottom:2px; }}
+#vc-invoice .imeta b {{ font-weight:600; font-variant-numeric:tabular-nums; }}
+#vc-invoice table {{ width:100%; border-collapse:collapse; font-size:14px; }}
+#vc-invoice thead th {{ text-align:left; font-size:11px; font-weight:600;
+    letter-spacing:.12em; text-transform:uppercase; color:#4C7A66;
+    border-bottom:1px solid #143A2D; padding:0 0 8px; }}
+#vc-invoice th.n, #vc-invoice td.n {{ text-align:right; white-space:nowrap;
+    font-variant-numeric:tabular-nums; }}
+#vc-invoice th.n, #vc-invoice td.n {{ padding-left:14px; }}
+#vc-invoice tbody td {{ padding:9px 0; border-bottom:1px solid #E4CFC5;
+    vertical-align:top; }}
+#vc-invoice .itotals {{ margin-left:auto; width:58%; margin-top:14px; }}
+#vc-invoice .trow {{ display:flex; justify-content:space-between; padding:6px 0;
+    font-size:14px; color:#4C7A66; font-variant-numeric:tabular-nums; }}
+#vc-invoice .trow.grand {{ color:#FFF4EF; background:#B7462A; margin-top:8px;
+    padding:12px 14px; font-size:17px; font-weight:600; }}
+#vc-invoice .ifoot {{ margin-top:26px; padding-top:16px;
+    border-top:1px solid #E4CFC5; text-align:center; }}
+#vc-invoice .barcode {{ height:42px; margin:0 auto 8px; max-width:280px;
+    background:repeating-linear-gradient(90deg,#143A2D 0 2px,transparent 2px 5px,
+    #143A2D 5px 6px,transparent 6px 10px,#143A2D 10px 13px,transparent 13px 15px); }}
+#vc-invoice .ifoot .code {{ font-size:12px; letter-spacing:.22em;
+    font-variant-numeric:tabular-nums; }}
+#vc-invoice .ifoot .ty {{ font-size:12.5px; color:#4C7A66; margin-top:8px; }}
+</style>
+
 <div id="vc-receipt">
   <div class="rhead">
     <span class="rlabel">{txt['invoice']}</span>
@@ -224,6 +282,37 @@ def render_receipt(cart, store_name, show_vat, lang):
     <span class="rv">{total:.2f} {txt['currency']}</span></div>
 </div>
 <button id="vc-print-btn" onclick="{PRINT_JS}">{txt['print']}</button>
+
+<div id="vc-invoice">
+  <div class="ihead">
+    <div>
+      <div class="istore">{store_name}</div>
+      <div class="itag">{txt['tagline_receipt']}</div>
+    </div>
+    <div class="ititle">{txt['invoice']}</div>
+  </div>
+  <div class="imeta">
+    <div><span>{txt['invoice']}</span><b>{invoice_no}</b></div>
+    <div><span>Date</span><b>{now.strftime('%Y-%m-%d')}</b></div>
+    <div><span>Time</span><b>{now.strftime('%H:%M')}</b></div>
+  </div>
+  <table>
+    <thead><tr><th>Item</th><th class="n">Qty</th><th class="n">Unit</th>
+      <th class="n">Amount</th></tr></thead>
+    <tbody>{inv_rows}</tbody>
+  </table>
+  <div class="itotals">
+    <div class="trow"><span>{txt['subtotal']}</span><span>{subtotal:.2f}</span></div>
+    {inv_vat}
+    <div class="trow grand"><span>{txt['total']}</span>
+      <span>{total:.2f} {txt['currency']}</span></div>
+  </div>
+  <div class="ifoot">
+    <div class="barcode"></div>
+    <div class="code">{invoice_no}</div>
+    <div class="ty">{txt['thank_you']}</div>
+  </div>
+</div>
 </div>
 """
 
