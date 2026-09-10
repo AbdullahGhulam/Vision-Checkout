@@ -526,6 +526,19 @@ body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
 .vc-eyebrow { display: block; color: var(--vc-moss); font-size: 13px; font-weight: 500;
   margin: 0 0 10px; }
 
+/* Text blocks are not cards. The rounded-white treatment is for real controls
+   only — applied to gr.HTML/gr.Markdown it turned the Input/Results labels and
+   the heading into empty-looking pill boxes. */
+#scanner .block:has(> .html-container), #scanner .block:has(> .prose),
+#scanner .block:has(> .md) {
+  background: transparent !important; border: none !important;
+  box-shadow: none !important; border-radius: 0 !important; padding: 0 !important; }
+#scanner .html-container, #scanner .prose, #scanner .md {
+  background: transparent !important; border: none !important;
+  padding: 0 !important; overflow: visible !important; }
+#scanner h2 { overflow: visible !important; }
+
+
 /* Threshold sits in its own cool panel, as in the kit. */
 #vc-threshold { background: var(--vc-sage) !important; border: none !important;
   border-radius: 24px !important; padding: 16px 20px !important; }
@@ -597,6 +610,27 @@ body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
    Flip the range track horizontally so the orange fill grows from the "0" side
    toward the thumb, and dragging LEFT increases the value. */
 .rtl-mode .slider_input_container input[type="range"] { transform: scaleX(-1); }
+
+/* Last word on text blocks: the dark-mode neutralisation above also forces a
+   white card background, so these have to come last and cover .dark too. */
+#scanner .block:has(> .html-container), .dark #scanner .block:has(> .html-container),
+#scanner .block:has(> .prose), .dark #scanner .block:has(> .prose),
+#scanner .block:has(> .md), .dark #scanner .block:has(> .md) {
+  background: transparent !important; border: none !important;
+  box-shadow: none !important; border-radius: 0 !important; padding: 0 !important; }
+#vc-heading, .dark #vc-heading, #scanner #vc-heading {
+  background: transparent !important; border: none !important;
+  box-shadow: none !important; border-radius: 0 !important;
+  padding: 0 !important; margin-bottom: 22px !important; }
+
+/* Component labels are captions, not badges. Gradio tints them with the
+   primary hue, which turned "Upload image" and "Detections" into loud pills. */
+#scanner [data-testid="block-label"], .dark #scanner [data-testid="block-label"] {
+  background: transparent !important; color: var(--vc-moss) !important;
+  border: none !important; box-shadow: none !important;
+  font-weight: 500 !important; padding-left: 0 !important; }
+#scanner [data-testid="block-label"] svg {
+  color: var(--vc-moss) !important; opacity: .6; }
 """
 
 
@@ -684,7 +718,8 @@ with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME,
 
         header_md = gr.Markdown(
             f"<h2>{T['en']['title']}</h2>"
-            f"<p class='vc-lede'>{T['en']['tagline']}</p>"
+            f"<p class='vc-lede'>{T['en']['tagline']}</p>",
+            elem_id="vc-heading",
         )
 
         with gr.Row(equal_height=False):
