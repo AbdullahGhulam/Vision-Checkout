@@ -119,6 +119,42 @@ def build_cart(detections):
     return cart
 
 
+# Printing the live page never worked: the receipt sits deep inside a very long
+# document, so `visibility:hidden` on everything plus `position:absolute` pushed
+# it outside the printable flow and produced blank pages. Instead, clone the
+# receipt into an isolated iframe and print that.
+PRINT_JS = (
+    "var r=document.getElementById('vc-receipt');"
+    "if(r){"
+    "var w=document.getElementById('vc-receipt-wrap');"
+    "var dir=(w&&w.getAttribute('dir'))||'ltr';"
+    "var s=document.getElementById('vc-rstyle');"
+    "var f=document.createElement('iframe');"
+    # A real page-sized layout box, parked off-screen. A 1px iframe makes the
+    # receipt lay out at 1px wide and print squashed.
+    "f.setAttribute('style','position:fixed;left:-10000px;top:0;width:794px;"
+    "height:1123px;border:0;');"
+    "document.body.appendChild(f);"
+    "var d=f.contentWindow.document;d.open();"
+    "d.write('<!doctype html><html><head><meta charset=utf-8>'"
+    "+(s?s.outerHTML:'')"
+    "+'<style>@page{margin:14mm}body{margin:0;background:#fff}"
+    "#vc-receipt{max-width:520px;margin:0 auto;border:none}"
+    "#vc-print-btn{display:none}</style></head><body dir='+dir+'>'"
+    "+r.outerHTML+'</body></html>');"
+    "d.close();"
+    "var L=d.createElement('link');L.rel='stylesheet';"
+    "L.href='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:"
+    "opsz,wght@12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap';"
+    "d.head.appendChild(L);"
+    "setTimeout(function(){"
+    "try{f.contentWindow.focus();f.contentWindow.print();}catch(e){window.print();}"
+    "setTimeout(function(){if(f.parentNode){f.parentNode.removeChild(f);}},1500);"
+    "},600);"
+    "}"
+)
+
+
 def render_receipt(cart, store_name, show_vat, lang):
     txt = T[lang]
     direction = "rtl" if lang == "ar" else "ltr"
@@ -145,7 +181,7 @@ def render_receipt(cart, store_name, show_vat, lang):
 
     return f"""
 <div id="vc-receipt-wrap" dir="{direction}">
-<style>
+<style id="vc-rstyle">
 #vc-receipt-wrap {{ margin:0; font-family:'Instrument Sans',system-ui,sans-serif; }}
 #vc-receipt {{ background:#FFF4EF; border:1px solid #EBCFC6; border-radius:28px;
     padding:28px 30px; width:100%; color:#143A2D; }}
@@ -172,12 +208,6 @@ def render_receipt(cart, store_name, show_vat, lang):
     font-size:15px; cursor:pointer; font-family:inherit;
     transition:background 160ms cubic-bezier(.22,.61,.36,1); }}
 #vc-print-btn:hover {{ background:#FBE3D8; }}
-@media print {{
-    body * {{ visibility:hidden !important; }}
-    #vc-receipt, #vc-receipt * {{ visibility:visible !important; }}
-    #vc-receipt {{ position:absolute; left:0; top:0; border:none; }}
-    #vc-print-btn {{ display:none !important; }}
-}}
 </style>
 <div id="vc-receipt">
   <div class="rhead">
@@ -193,7 +223,7 @@ def render_receipt(cart, store_name, show_vat, lang):
   <div class="total"><span class="rl">{txt['total']}</span>
     <span class="rv">{total:.2f} {txt['currency']}</span></div>
 </div>
-<button id="vc-print-btn" onclick="window.print()">{txt['print']}</button>
+<button id="vc-print-btn" onclick="{PRINT_JS}">{txt['print']}</button>
 </div>
 """
 
