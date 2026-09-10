@@ -7,8 +7,20 @@ from datetime import datetime
 from pathlib import Path
 
 import gradio as gr
-from PIL import Image, ImageOps
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 from ultralytics import YOLO
+
+# Blush Aisle palette, as RGB, for drawing onto the annotated image.
+C_PERSIMMON = (217, 95, 59)
+C_PERSIMMON_DEEP = (183, 70, 42)
+C_MUSTARD = (224, 169, 59)
+C_CREAM = (255, 244, 239)
+C_FOREST_DEEP = (20, 58, 45)
+
+# Detection runs at this floor; the slider then splits results into confident
+# detections and low-confidence ones, so the threshold is live rather than
+# something you have to re-scan to change.
+DETECT_FLOOR = 0.15
 
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / "models" / "Fine_Tuned_SAUDI_model" / "weights" / "best.pt"
@@ -118,71 +130,127 @@ def render_receipt(cart, store_name, show_vat, lang):
     now = datetime.now()
     invoice_no = f"VC-{random.randint(10000, 99999)}"
 
+    n_lines = len(cart)
     rows = "".join(
-        f'<div class="row"><span>{it["info"]["emoji"]} {label(it["info"])} ×{it["count"]}</span>'
-        f'<span>{it["info"]["price"] * it["count"]:.2f} {txt["currency"]}</span></div>'
+        f'<div class="row"><span class="rl">{label(it["info"])}'
+        f'{" &times;" + str(it["count"]) if it["count"] > 1 else ""}</span>'
+        f'<span class="rv">{it["info"]["price"] * it["count"]:.2f}</span></div>'
         for it in cart.values()
     )
     vat_row = (
-        f'<div class="row vat"><span>{txt["vat_label"]}</span>'
-        f'<span>{vat:.2f} {txt["currency"]}</span></div>'
+        f'<div class="row muted"><span class="rl">{txt["vat_label"]}</span>'
+        f'<span class="rv">{vat:.2f}</span></div>'
         if show_vat else ""
     )
 
     return f"""
 <div id="vc-receipt-wrap" dir="{direction}">
 <style>
-#vc-receipt-wrap {{ display:flex; flex-direction:column; align-items:center; margin:8px 0;
-    font-family:'Instrument Sans',system-ui,sans-serif; }}
-#vc-receipt {{ background:#FFF4EF; border:1px solid #EBCFC6; border-radius:32px;
-    padding:32px 28px; max-width:400px; width:100%; color:#143A2D; }}
-#vc-receipt .hd {{ text-align:center; border-bottom:1px solid #EBCFC6;
-    padding-bottom:16px; margin-bottom:16px; }}
-#vc-receipt .store {{ font-family:'Bricolage Grotesque','Instrument Sans',sans-serif;
-    font-size:1.5rem; font-weight:800; letter-spacing:-.03em; color:#143A2D; }}
-#vc-receipt .sub {{ font-size:0.78rem; color:#4C7A66; margin-top:4px; }}
-#vc-receipt .row {{ display:flex; justify-content:space-between; padding:9px 0;
-    font-size:0.92rem; border-bottom:1px solid #F6E4BE; font-variant-numeric:tabular-nums; }}
-#vc-receipt .row.vat {{ color:#4C7A66; font-size:0.85rem; }}
-#vc-receipt .total {{ display:flex; justify-content:space-between;
-    border-top:1px solid #EBCFC6; padding-top:14px; margin-top:12px;
-    font-weight:600; font-size:1.15rem; color:#B7462A; font-variant-numeric:tabular-nums; }}
-#vc-receipt .ft {{ text-align:center; margin-top:18px; padding-top:16px;
-    border-top:1px solid #EBCFC6; font-size:0.78rem; color:#4C7A66; }}
-#vc-receipt .barcode {{ font-size:1.6rem; letter-spacing:3px; color:#A9C9B8; margin:8px 0 4px; }}
-#vc-print-btn {{ margin-top:16px; padding:14px 30px; background:#D95F3B; color:#FFF4EF;
-    border:none; border-radius:999px; font-weight:500; font-size:15px; cursor:pointer;
+#vc-receipt-wrap {{ margin:0; font-family:'Instrument Sans',system-ui,sans-serif; }}
+#vc-receipt {{ background:#FFF4EF; border:1px solid #EBCFC6; border-radius:28px;
+    padding:28px 30px; width:100%; color:#143A2D; }}
+#vc-receipt .rhead {{ display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:18px; }}
+#vc-receipt .rlabel {{ font-weight:600; font-size:14px; }}
+#vc-receipt .rmeta {{ font-size:13px; color:#4C7A66; font-variant-numeric:tabular-nums; }}
+#vc-receipt .rstore {{ font-family:'Bricolage Grotesque','Instrument Sans',sans-serif;
+    font-size:26px; font-weight:800; letter-spacing:-.03em; line-height:1.15; }}
+#vc-receipt .rsub {{ font-size:13px; color:#4C7A66; margin:2px 0 18px;
+    font-variant-numeric:tabular-nums; }}
+#vc-receipt .row {{ display:flex; justify-content:space-between; align-items:baseline;
+    gap:16px; padding:9px 0; font-size:15px; border-bottom:1px solid #EBCFC6;
+    font-variant-numeric:tabular-nums; }}
+#vc-receipt .row.muted {{ color:#4C7A66; font-size:14px; }}
+#vc-receipt .rv {{ font-variant-numeric:tabular-nums; white-space:nowrap; }}
+#vc-receipt .total {{ display:flex; justify-content:space-between; align-items:baseline;
+    padding-top:18px; }}
+#vc-receipt .total .rl {{ font-weight:600; font-size:14px; }}
+#vc-receipt .total .rv {{ font-size:26px; font-weight:600; color:#B7462A;
+    font-variant-numeric:tabular-nums; letter-spacing:-.01em; }}
+#vc-print-btn {{ margin-top:16px; padding:13px 26px; background:transparent;
+    color:#143A2D; border:1px solid #EBCFC6; border-radius:999px; font-weight:500;
+    font-size:15px; cursor:pointer; font-family:inherit;
     transition:background 160ms cubic-bezier(.22,.61,.36,1); }}
-#vc-print-btn:hover {{ background:#B7462A; }}
+#vc-print-btn:hover {{ background:#FBE3D8; }}
 @media print {{
     body * {{ visibility:hidden !important; }}
     #vc-receipt, #vc-receipt * {{ visibility:visible !important; }}
-    #vc-receipt {{ position:absolute; left:0; top:0; border:none; box-shadow:none; }}
+    #vc-receipt {{ position:absolute; left:0; top:0; border:none; }}
     #vc-print-btn {{ display:none !important; }}
 }}
 </style>
 <div id="vc-receipt">
-  <div class="hd">
-    <div class="store">🛒 {store_name}</div>
-    <div class="sub">{txt['tagline_receipt']}</div>
-    <div class="sub">{now.strftime('%Y-%m-%d')} &nbsp; {now.strftime('%H:%M:%S')}</div>
-    <div class="sub">{txt['invoice']}: {invoice_no}</div>
+  <div class="rhead">
+    <span class="rlabel">{txt['invoice']}</span>
+    <span class="rmeta">{n_lines} {"line" if n_lines == 1 else "lines"}</span>
   </div>
+  <div class="rstore">{store_name}</div>
+  <div class="rsub">{now.strftime('%Y-%m-%d %H:%M')} &middot; {invoice_no}</div>
   {rows}
-  <div class="row" style="margin-top:6px;"><span>{txt['subtotal']}</span>
-    <span>{subtotal:.2f} {txt['currency']}</span></div>
+  <div class="row muted"><span class="rl">{txt['subtotal']}</span>
+    <span class="rv">{subtotal:.2f}</span></div>
   {vat_row}
-  <div class="total"><span>{txt['total']}</span>
-    <span>{total:.2f} {txt['currency']}</span></div>
-  <div class="ft">
-    <div class="barcode">||||| |||| ||||| ||||</div>
-    <div>{invoice_no}</div>
-    <div style="margin-top:8px;">{txt['thank_you']}</div>
-  </div>
+  <div class="total"><span class="rl">{txt['total']}</span>
+    <span class="rv">{total:.2f} {txt['currency']}</span></div>
 </div>
 <button id="vc-print-btn" onclick="window.print()">{txt['print']}</button>
 </div>
 """
+
+
+def _label_font(size):
+    for name in ("DejaVuSans-Bold.ttf", "arialbd.ttf", "Arial Bold.ttf"):
+        try:
+            return ImageFont.truetype(name, size)
+        except OSError:
+            continue
+    try:
+        return ImageFont.load_default(size=size)
+    except TypeError:          # Pillow < 10 has no size argument
+        return ImageFont.load_default()
+
+
+def draw_detections(img, dets, threshold):
+    """Draw every box in the accent colour, per the design system.
+
+    One colour for all classes — the model's output is one kind of assertion,
+    and the class is carried by the label. Low-confidence boxes take the
+    scorch/mustard tone and a thinner stroke.
+    """
+    out = img.copy()
+    d = ImageDraw.Draw(out)
+    scale = max(out.width, out.height) / 900
+    font = _label_font(max(13, int(16 * scale)))
+    pad = max(4, int(6 * scale))
+
+    for det in dets:
+        low = det["conf"] < threshold
+        colour = C_MUSTARD if low else C_PERSIMMON
+        width = max(2, int((2 if low else 3) * scale))
+        x1, y1, x2, y2 = det["xyxy"]
+        d.rectangle([x1, y1, x2, y2], outline=colour, width=width)
+
+        text = f"{det['label']} {int(det['conf'] * 100)}"
+        try:
+            tw = d.textlength(text, font=font)
+            th = font.size
+        except AttributeError:                     # very old Pillow
+            tw, th = d.textsize(text, font=font)
+        cy = max(0, y1 - th - pad * 2)
+        d.rectangle([x1, cy, x1 + tw + pad * 2, cy + th + pad * 2], fill=colour)
+        d.text((x1 + pad, cy + pad), text,
+               fill=C_FOREST_DEEP if low else C_CREAM, font=font)
+    return out
+
+
+def _chip(label, count):
+    return (f'<span class="vc-chip">{label}'
+            f'<span class="vc-chip-n">&times;{count}</span></span>')
+
+
+def _badge(label, conf):
+    return (f'<span class="vc-badge">{label}'
+            f'<span class="vc-badge-n">{int(conf * 100)}%</span></span>')
 
 
 def predict(image, conf, store_name, show_vat, lang):
@@ -191,26 +259,43 @@ def predict(image, conf, store_name, show_vat, lang):
         return None, "", ""
 
     img = ImageOps.exif_transpose(image).convert("RGB")
-    result = model.predict(img, conf=conf, device="cpu", verbose=False)[0]
-    # result.plot() returns a BGR ndarray; flip channels and copy() so PIL gets a contiguous RGB array.
-    annotated = Image.fromarray(result.plot()[:, :, ::-1].copy())
+    result = model.predict(img, conf=DETECT_FLOOR, device="cpu", verbose=False)[0]
 
-    classes = [model.names[int(b.cls)] for b in result.boxes]
-    if not classes:
-        return annotated, f"**{txt['no_items']}**", ""
+    dets = [{"cls": model.names[int(b.cls)],
+             "label": model.names[int(b.cls)].replace("_", " "),
+             "conf": float(b.conf),
+             "xyxy": [float(v) for v in b.xyxy[0]]}
+            for b in result.boxes]
 
-    cart = build_cart(classes)
-    n_items = sum(it["count"] for it in cart.values())
+    annotated = draw_detections(img, dets, conf)
+
+    above = [d for d in dets if d["conf"] >= conf]
+    below = [d for d in dets if d["conf"] < conf]
+
+    if not above and not below:
+        return annotated, f'<p class="vc-empty">{txt["no_items"]}</p>', ""
+
     label = (lambda info: info["ar"]) if lang == "ar" else (lambda info: info["en"])
+    cart = build_cart([d["cls"] for d in above])
+    n_items = sum(it["count"] for it in cart.values())
 
-    summary_lines = [f"**{txt['detected_count'].format(n=n_items, k=len(cart))}**", ""]
-    for it in cart.values():
-        info = it["info"]
-        summary_lines.append(
-            f"- {info['emoji']} **{label(info)}** ×{it['count']} — "
-            f"`{info['price'] * it['count']:.2f} {txt['currency']}`"
-        )
-    summary = "\n".join(summary_lines)
+    chips = "".join(_chip(label(it["info"]), it["count"]) for it in cart.values())
+    badges = "".join(_badge(d["label"], d["conf"]) for d in below)
+
+    note = ""
+    if below:
+        note = (f'<p class="vc-note">{len(below)} '
+                f'{"item is" if len(below) == 1 else "items are"} below the '
+                f'threshold. Lower it to include '
+                f'{"it" if len(below) == 1 else "them"}.</p>')
+
+    if not above:
+        summary = f'<div class="vc-chips">{badges}</div>{note}'
+        return annotated, summary, ""
+
+    summary = (f'<p class="vc-count">'
+               f'{txt["detected_count"].format(n=n_items, k=len(cart))}</p>'
+               f'<div class="vc-chips">{chips}{badges}</div>{note}')
     receipt = render_receipt(cart, store_name, show_vat, lang)
     return annotated, summary, receipt
 
@@ -307,7 +392,44 @@ body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
   color: var(--vc-forest-deep) !important; font-weight: 500 !important; }
 #scanner .prose, #scanner .md { color: var(--vc-forest-deep) !important; }
 #scanner a { color: var(--vc-persimmon-deep); }
-.lang-toggle button { min-width: 90px; }
+
+/* ── Scanner chrome, per ui_kits/scanner ───────────────────────────────── */
+#vc-band { background: var(--vc-forest) !important; border-radius: 999px !important;
+  padding: 6px 10px 6px 22px !important; margin-bottom: 28px !important;
+  align-items: center !important; }
+#vc-band .vc-mark { color: var(--vc-cream); font-family: "Bricolage Grotesque", sans-serif;
+  font-weight: 800; font-size: 18px; letter-spacing: -.035em; }
+#vc-band .block, #vc-band .form { background: transparent !important; border: none !important; }
+.lang-toggle button { min-width: 84px; background: transparent !important;
+  color: var(--vc-cream) !important; border: 1px solid rgba(255,244,239,.4) !important; }
+.lang-toggle button:hover { background: rgba(255,244,239,.12) !important; }
+
+.vc-eyebrow { display: block; color: var(--vc-moss); font-size: 13px; font-weight: 500;
+  margin: 0 0 10px; }
+
+/* Threshold sits in its own cool panel, as in the kit. */
+#vc-threshold { background: var(--vc-sage) !important; border: none !important;
+  border-radius: 24px !important; padding: 16px 20px !important; }
+#vc-threshold .block { background: transparent !important; border: none !important; }
+#vc-threshold label > span, #vc-threshold span[data-testid="block-info"] {
+  color: var(--vc-forest-deep) !important; }
+
+/* Detections: chips for confident reads, scorch badges for low-confidence ones. */
+.vc-count { color: var(--vc-forest-deep); font-weight: 500; margin: 4px 0 12px; font-size: 15px; }
+.vc-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
+.vc-chip, .vc-badge { display: inline-flex; align-items: center; gap: 8px;
+  border-radius: 999px; padding: 8px 16px; font-size: 14px; font-weight: 500; }
+.vc-chip { background: var(--vc-persimmon-wash); color: var(--vc-persimmon-deep); }
+.vc-chip-n, .vc-badge-n { font-variant-numeric: tabular-nums; opacity: .75; }
+.vc-badge { background: var(--vc-mustard-wash); color: #7A5310; }
+.vc-note { color: var(--vc-moss); font-size: 13px; margin: 10px 0 0; }
+.vc-empty { color: var(--vc-moss); font-size: 16px; margin: 8px 0 0; }
+
+.vc-foot { margin-top: 32px; background: var(--vc-forest); color: var(--vc-cream);
+  border-radius: 999px; padding: 14px 26px; font-size: 13px; font-weight: 500; }
+
+@media (max-width: 860px) { #vc-band { border-radius: 28px !important; } }
+
 /* The design system is light-only. Neutralise Gradio dark mode in CSS rather
    than redirecting the page — a redirect loops and kills every event. */
 .dark, .dark body, .dark .gradio-container {
@@ -434,38 +556,28 @@ with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME,
     root = gr.Column(elem_classes=[], elem_id="scanner")
 
     with root:
-        with gr.Row():
-            with gr.Column(scale=6):
-                header_md = gr.Markdown(
-                    f"<h2>{T['en']['title']}</h2>"
-                    f"<p class='vc-lede'>{T['en']['tagline']}</p>"
-                )
-            with gr.Column(scale=1, min_width=120, elem_classes=["lang-toggle"]):
+        # Header band — the forest strip that ties the tool to the poster.
+        with gr.Row(elem_id="vc-band"):
+            with gr.Column(scale=6, min_width=200):
+                gr.HTML("<span class='vc-mark'>Vision Checkout</span>")
+            with gr.Column(scale=1, min_width=110, elem_classes=["lang-toggle"]):
                 lang_btn = gr.Button("AR 🌐", size="sm")
 
-        with gr.Row():
-            # ── LEFT column: results (detections image + receipt) ──
-            with gr.Column(scale=1):
-                annotated_out = gr.Image(label=T["en"]["detections"], height=380,
-                                         interactive=False)
-                summary_out = gr.Markdown()
-                receipt_out = gr.HTML()
+        header_md = gr.Markdown(
+            f"<h2>{T['en']['title']}</h2>"
+            f"<p class='vc-lede'>{T['en']['tagline']}</p>"
+        )
 
-            # ── RIGHT column: upload, parameters, samples ──
-            with gr.Column(scale=1):
+        with gr.Row(equal_height=False):
+            # ── LEFT: input, narrow ──
+            with gr.Column(scale=1, min_width=320, elem_id="vc-input"):
+                gr.HTML("<span class='vc-eyebrow'>Input</span>")
                 image_in = gr.Image(label=T["en"]["image_label"], type="pil",
-                                    sources=["upload", "clipboard"], height=380)
-
-                with gr.Group():
-                    conf_slider = gr.Slider(0.0, 1.0, value=0.25, step=0.05,
-                                            label=T["en"]["confidence"])
-                    store_in = gr.Textbox(label=T["en"]["store"], value="VISION MART")
-                    vat_in = gr.Checkbox(label=T["en"]["vat"], value=True)
-
-                scan_btn = gr.Button(T["en"]["scan"], variant="primary")
-
-                with gr.Accordion(T["en"]["prices_label"], open=False) as prices_acc:
-                    prices_md = gr.Markdown(price_list_markdown("en"))
+                                    sources=["upload", "clipboard"], height=250)
+                with gr.Row():
+                    random_btn = gr.Button("Load a random sample", size="sm",
+                                           variant="secondary")
+                    shuffle_btn = gr.Button(T["en"]["shuffle"], size="sm")
 
                 samples_gallery = gr.Dataset(
                     components=[image_in],
@@ -473,10 +585,27 @@ with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME,
                     label=T["en"]["samples"],
                     samples_per_page=3,
                 )
-                with gr.Row():
-                    random_btn = gr.Button("Load a random sample", size="sm",
-                                           variant="secondary")
-                    shuffle_btn = gr.Button(T["en"]["shuffle"], size="sm")
+
+                with gr.Group(elem_id="vc-threshold"):
+                    conf_slider = gr.Slider(0.0, 1.0, value=0.45, step=0.05,
+                                            label=T["en"]["confidence"])
+
+                store_in = gr.Textbox(label=T["en"]["store"], value="VISION MART")
+                vat_in = gr.Checkbox(label=T["en"]["vat"], value=True)
+                scan_btn = gr.Button(T["en"]["scan"], variant="primary")
+
+                with gr.Accordion(T["en"]["prices_label"], open=False) as prices_acc:
+                    prices_md = gr.Markdown(price_list_markdown("en"))
+
+            # ── RIGHT: results, wide ──
+            with gr.Column(scale=2, elem_id="vc-results"):
+                gr.HTML("<span class='vc-eyebrow'>Results</span>")
+                annotated_out = gr.Image(label=T["en"]["detections"], height=430,
+                                         interactive=False)
+                summary_out = gr.HTML()
+                receipt_out = gr.HTML()
+
+        gr.HTML("<div class='vc-foot'>Vision Checkout &mdash; alpha</div>")
 
     # ── wiring ──
     scan_btn.click(

@@ -39,7 +39,10 @@
 #vc-landing .frame{width:100%;max-width:400px;aspect-ratio:1/1;border-radius:var(--radius-lg);
   overflow:hidden;background:var(--persimmon-wash);position:relative}
 #vc-landing .frame img{width:100%;height:100%;object-fit:cover;display:block}
-#vc-landing .box{position:absolute;border:2px dotted var(--persimmon);border-radius:20px;pointer-events:none}
+/* 2px dotted (the kit default) vanishes over this artwork, so the stroke is
+   heavier and carries a dark halo to separate it from the illustration. */
+#vc-landing .box{position:absolute;border:3px dotted var(--persimmon);border-radius:20px;
+  pointer-events:none;box-shadow:0 0 0 1.5px rgba(20,58,45,.28),inset 0 0 0 1.5px rgba(20,58,45,.18)}
 #vc-landing .tag{position:absolute;background:var(--forest-deep);color:var(--cream);border-radius:var(--radius-pill);
   padding:7px 13px;font-size:12.5px;font-weight:500;display:flex;gap:8px;align-items:center;white-space:nowrap;
   box-shadow:0 0 0 1px rgba(255,244,239,.22)}
@@ -86,6 +89,27 @@
   #vc-landing{gap:32px}
   #vc-landing .hero-copy,#vc-landing .trolley,#vc-landing .closer,#vc-landing .flow{padding:26px 22px}
 }
+
+/* Motion: the boxes draw in and breathe, the labels drift. Everything that
+   moves sits on top of the artwork — the illustration itself is one flat
+   image, so its contents cannot be animated separately. */
+@keyframes vc-boxin{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+@keyframes vc-breathe{0%,100%{opacity:1;transform:scale(1);border-color:var(--persimmon)}
+  50%{opacity:.8;transform:scale(1.035);border-color:var(--persimmon-deep)}}
+@keyframes vc-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes vc-tagin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+#vc-landing .box{transform-origin:center;
+  animation:vc-boxin .55s cubic-bezier(.22,.61,.36,1) both,
+            vc-breathe 3.4s ease-in-out infinite}
+/* Two animations on one element, so both delays in the inline style apply:
+   the label fades in, then drifts on its own cycle. */
+#vc-landing .tag.floaty{animation:vc-tagin .5s cubic-bezier(.22,.61,.36,1) both,
+  vc-float 5.4s ease-in-out infinite}
+#vc-landing .floaty{animation:vc-float 5.4s ease-in-out infinite}
+#vc-landing .blob{animation:vc-float 9s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){
+  #vc-landing .box,#vc-landing .tag,#vc-landing .floaty,#vc-landing .blob{animation:none!important}
+}
 </style>
 
 <div class="nav">
@@ -111,16 +135,16 @@
   <div class="shot">
     <div class="frame">
       <img src="__CART_IMG__" alt="Illustration of a shopping cart filled with groceries">
-      <div class="box" style="left:14%;top:23%;width:17%;height:18%"></div>
-      <div class="box" style="left:56%;top:12%;width:11%;height:22%"></div>
-      <div class="box" style="left:35%;top:40%;width:14%;height:23%"></div>
-      <div class="box" style="left:33%;top:19%;width:14%;height:23%"></div>
-      <div class="box" style="left:46%;top:47%;width:11%;height:14%"></div>
-      <span class="tag" style="left:2%;top:13%">Carrots <span class="num">×2</span></span>
-      <span class="tag" style="left:4%;top:43%">Bread <span class="num">×1</span></span>
-      <span class="tag" style="right:4%;top:36%">Olive oil <span class="num">×1</span></span>
-      <span class="tag" style="left:28%;top:65%">Milk <span class="num">×1</span></span>
-      <span class="tag" style="right:4%;top:63%">Jam <span class="num">×1</span></span>
+      <div class="box" style="left:14%;top:23%;width:17%;height:18%;animation-delay:.05s,0.65s"></div>
+      <div class="box" style="left:56%;top:12%;width:11%;height:22%;animation-delay:.18s,0.78s"></div>
+      <div class="box" style="left:35%;top:40%;width:14%;height:23%;animation-delay:.31s,0.91s"></div>
+      <div class="box" style="left:33%;top:19%;width:14%;height:23%;animation-delay:.44s,1.04s"></div>
+      <div class="box" style="left:46%;top:47%;width:11%;height:14%;animation-delay:.57s,1.17s"></div>
+      <span class="tag floaty" style="animation-delay:.62s,0.0s;left:2%;top:13%">Carrots <span class="num">×2</span></span>
+      <span class="tag floaty" style="animation-delay:.72s,0.4s;left:4%;top:43%">Bread <span class="num">×1</span></span>
+      <span class="tag floaty" style="animation-delay:.82s,0.8s;right:4%;top:36%">Olive oil <span class="num">×1</span></span>
+      <span class="tag floaty" style="animation-delay:.92s,1.2s;left:28%;top:65%">Milk <span class="num">×1</span></span>
+      <span class="tag floaty" style="animation-delay:1.02s,1.6s;right:4%;top:63%">Jam <span class="num">×1</span></span>
     </div>
     <span class="total">Total <span class="num" style="color:var(--cream)">SAR 84.20</span></span>
   </div>
