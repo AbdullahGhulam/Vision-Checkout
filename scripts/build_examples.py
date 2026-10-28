@@ -7,7 +7,7 @@ design system's palette, and priced with the same table the scanner uses.
 Run from the repo root:  python scripts/build_examples.py [sources.json]
 Outputs:                 web/examples/ex_XX.jpg and web/examples/examples.json
 
-sources.json, if given, is a list of {"path", "credit", "license", "url"} for
+sources.json, if given, is a list of {"path", "credit", "license", "url", "conf"} for
 photos from outside the repo. Licences must allow modification, since the
 boxes are drawn onto the photo; the credit is shown on the card.
 """
@@ -107,7 +107,7 @@ def main():
         src = Path(srcinfo["path"])
         name = src.name
         img = ImageOps.exif_transpose(Image.open(src)).convert("RGB")
-        res = app.model.predict(img, conf=CONF, device="cpu", verbose=False)[0]
+        res = app.model.predict(img, conf=srcinfo.get("conf", CONF), device="cpu", verbose=False)[0]
         raw = [([float(v) for v in b.xyxy[0]], app.model.names[int(b.cls)])
                for b in res.boxes]
 

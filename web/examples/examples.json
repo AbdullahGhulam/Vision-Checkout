@@ -1,30 +1,132 @@
 [
   {
     "file": "ex_01.jpg",
-    "source": "wm_132206866.jpg",
+    "source": "5.jpg",
     "invoice": "VC-3017",
-    "n": 10,
+    "n": 11,
     "categories": 1,
     "items": [
       {
         "key": "drink",
         "en": "Drinks",
         "ar": "مشروبات",
-        "count": 10,
+        "count": 11,
         "price": 3.5
       }
     ],
-    "subtotal": 35.0,
-    "vat": 5.25,
-    "total": 40.25,
-    "credit": "Challiyan",
-    "license": "CC BY-SA 4.0",
-    "url": "https://commons.wikimedia.org/wiki/File:Fruit_juices_in_bottles.jpg"
+    "subtotal": 38.5,
+    "vat": 5.77,
+    "total": 44.27,
+    "credit": null,
+    "license": null,
+    "url": null
   },
   {
     "file": "ex_02.jpg",
-    "source": "7eb88ee9.jpg",
+    "source": "2.jpg",
     "invoice": "VC-3034",
+    "n": 3,
+    "categories": 1,
+    "items": [
+      {
+        "key": "milk",
+        "en": "Milk",
+        "ar": "حليب",
+        "count": 3,
+        "price": 9.0
+      }
+    ],
+    "subtotal": 27.0,
+    "vat": 4.05,
+    "total": 31.05,
+    "credit": null,
+    "license": null,
+    "url": null
+  },
+  {
+    "file": "ex_03.jpg",
+    "source": "WhatsApp Image 2026-05-12 at 2.18.56 PM.jpeg",
+    "invoice": "VC-3051",
+    "n": 4,
+    "categories": 3,
+    "items": [
+      {
+        "key": "drink",
+        "en": "Drinks",
+        "ar": "مشروبات",
+        "count": 2,
+        "price": 3.5
+      },
+      {
+        "key": "dessert",
+        "en": "Dessert",
+        "ar": "حلويات",
+        "count": 1,
+        "price": 4.0
+      },
+      {
+        "key": "candy",
+        "en": "Candy",
+        "ar": "حلوى",
+        "count": 1,
+        "price": 3.0
+      }
+    ],
+    "subtotal": 14.0,
+    "vat": 2.1,
+    "total": 16.1,
+    "credit": null,
+    "license": null,
+    "url": null
+  },
+  {
+    "file": "ex_04.jpg",
+    "source": "p03_44.png",
+    "invoice": "VC-3068",
+    "n": 2,
+    "categories": 1,
+    "items": [
+      {
+        "key": "dessert",
+        "en": "Dessert",
+        "ar": "حلويات",
+        "count": 2,
+        "price": 4.0
+      }
+    ],
+    "subtotal": 8.0,
+    "vat": 1.2,
+    "total": 9.2,
+    "credit": null,
+    "license": null,
+    "url": null
+  },
+  {
+    "file": "ex_05.jpg",
+    "source": "6.jpg",
+    "invoice": "VC-3085",
+    "n": 2,
+    "categories": 1,
+    "items": [
+      {
+        "key": "puffed_food",
+        "en": "Puffed snacks",
+        "ar": "وجبات خفيفة",
+        "count": 2,
+        "price": 6.5
+      }
+    ],
+    "subtotal": 13.0,
+    "vat": 1.95,
+    "total": 14.95,
+    "credit": null,
+    "license": null,
+    "url": null
+  },
+  {
+    "file": "ex_06.jpg",
+    "source": "7eb88ee9.jpg",
+    "invoice": "VC-3102",
     "n": 2,
     "categories": 1,
     "items": [
@@ -42,93 +144,5 @@
     "credit": "joegoauk73",
     "license": "CC BY-SA 2.0",
     "url": "https://www.flickr.com/photos/95914901@N08/18504428281"
-  },
-  {
-    "file": "ex_03.jpg",
-    "source": "wm_131599919.jpg",
-    "invoice": "VC-3051",
-    "n": 22,
-    "categories": 1,
-    "items": [
-      {
-        "key": "drink",
-        "en": "Drinks",
-        "ar": "مشروبات",
-        "count": 22,
-        "price": 3.5
-      }
-    ],
-    "subtotal": 77.0,
-    "vat": 11.55,
-    "total": 88.55,
-    "credit": "Oto Zapletal",
-    "license": "CC BY-SA 4.0",
-    "url": "https://commons.wikimedia.org/wiki/File:Various_energy_drinks_07.jpg"
-  },
-  {
-    "file": "ex_04.jpg",
-    "source": "wm_157218614.jpg",
-    "invoice": "VC-3068",
-    "n": 2,
-    "categories": 1,
-    "items": [
-      {
-        "key": "drink",
-        "en": "Drinks",
-        "ar": "مشروبات",
-        "count": 2,
-        "price": 3.5
-      }
-    ],
-    "subtotal": 7.0,
-    "vat": 1.05,
-    "total": 8.05,
-    "credit": "BigBlobfish",
-    "license": "CC0",
-    "url": "https://commons.wikimedia.org/wiki/File:Several_Pepsi_Cans.jpg"
-  },
-  {
-    "file": "ex_05.jpg",
-    "source": "wm_131598585.jpg",
-    "invoice": "VC-3085",
-    "n": 7,
-    "categories": 1,
-    "items": [
-      {
-        "key": "drink",
-        "en": "Drinks",
-        "ar": "مشروبات",
-        "count": 7,
-        "price": 3.5
-      }
-    ],
-    "subtotal": 24.5,
-    "vat": 3.67,
-    "total": 28.17,
-    "credit": "Oto Zapletal",
-    "license": "CC BY-SA 4.0",
-    "url": "https://commons.wikimedia.org/wiki/File:Various_energy_drinks_03.jpg"
-  },
-  {
-    "file": "ex_06.jpg",
-    "source": "wm_195789649.jpg",
-    "invoice": "VC-3102",
-    "n": 2,
-    "categories": 1,
-    "items": [
-      {
-        "key": "drink",
-        "en": "Drinks",
-        "ar": "مشروبات",
-        "count": 2,
-        "price": 3.5
-      }
-    ],
-    "subtotal": 7.0,
-    "vat": 1.05,
-    "total": 8.05,
-    "credit": "Hillsilo",
-    "license": "CC BY 4.0",
-    "url": "https://commons.wikimedia.org/wiki/File:2_Pepsi_cans,_zero_sugar.jpg"
   }
 ]
