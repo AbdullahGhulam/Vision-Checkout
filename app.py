@@ -28,23 +28,23 @@ MODEL_PATH = BASE_DIR / "models" / "Fine_Tuned_SAUDI_model" / "weights" / "best.
 TEST_IMAGES_DIR = BASE_DIR / "models" / "Fine_Tuned_SAUDI_model" / "test_images"
 
 CATEGORY_PRICES = {
-    "puffed_food":      {"ar": "وجبات خفيفة",   "en": "Puffed snacks",   "price": 6.50,  "emoji": "🍿"},
-    "dried_fruit":      {"ar": "فواكه مجففة",   "en": "Dried fruit",     "price": 12.00, "emoji": "🍇"},
-    "dried_food":       {"ar": "أغذية مجففة",   "en": "Dried food",      "price": 8.00,  "emoji": "🥜"},
-    "instant_drink":    {"ar": "مشروب سريع",    "en": "Instant drink",   "price": 5.00,  "emoji": "☕"},
-    "instant_noodles":  {"ar": "نودلز سريع",    "en": "Instant noodles", "price": 4.50,  "emoji": "🍜"},
-    "dessert":          {"ar": "حلويات",         "en": "Dessert",         "price": 4.00,  "emoji": "🍰"},
-    "drink":            {"ar": "مشروبات",        "en": "Drinks",          "price": 3.50,  "emoji": "🥤"},
-    "alcohol":          {"ar": "مشروب كحولي",   "en": "Alcohol",         "price": 0.00,  "emoji": "🚫"},
-    "milk":             {"ar": "حليب",           "en": "Milk",            "price": 9.00,  "emoji": "🥛"},
-    "canned_food":      {"ar": "معلبات",         "en": "Canned food",     "price": 5.00,  "emoji": "🥫"},
-    "chocolate":        {"ar": "شوكولاتة",       "en": "Chocolate",       "price": 7.00,  "emoji": "🍫"},
-    "gum":              {"ar": "علكة",           "en": "Gum",             "price": 2.50,  "emoji": "🫧"},
-    "candy":            {"ar": "حلوى",           "en": "Candy",           "price": 3.00,  "emoji": "🍬"},
-    "seasoner":         {"ar": "بهارات وتوابل", "en": "Seasoning",       "price": 6.00,  "emoji": "🧂"},
-    "personal_hygiene": {"ar": "عناية شخصية",   "en": "Personal care",   "price": 15.00, "emoji": "🧴"},
-    "tissue":           {"ar": "مناديل",         "en": "Tissues",         "price": 8.00,  "emoji": "🧻"},
-    "stationery":       {"ar": "قرطاسية",        "en": "Stationery",      "price": 10.00, "emoji": "✏️"},
+    "puffed_food":      {"en": "Puffed snacks",   "price": 6.50,  "emoji": "🍿"},
+    "dried_fruit":      {"en": "Dried fruit",     "price": 12.00, "emoji": "🍇"},
+    "dried_food":       {"en": "Dried food",      "price": 8.00,  "emoji": "🥜"},
+    "instant_drink":    {"en": "Instant drink",   "price": 5.00,  "emoji": "☕"},
+    "instant_noodles":  {"en": "Instant noodles", "price": 4.50,  "emoji": "🍜"},
+    "dessert":          {"en": "Dessert",         "price": 4.00,  "emoji": "🍰"},
+    "drink":            {"en": "Drinks",          "price": 3.50,  "emoji": "🥤"},
+    "alcohol":          {"en": "Alcohol",         "price": 0.00,  "emoji": "🚫"},
+    "milk":             {"en": "Milk",            "price": 9.00,  "emoji": "🥛"},
+    "canned_food":      {"en": "Canned food",     "price": 5.00,  "emoji": "🥫"},
+    "chocolate":        {"en": "Chocolate",       "price": 7.00,  "emoji": "🍫"},
+    "gum":              {"en": "Gum",             "price": 2.50,  "emoji": "🫧"},
+    "candy":            {"en": "Candy",           "price": 3.00,  "emoji": "🍬"},
+    "seasoner":         {"en": "Seasoning",       "price": 6.00,  "emoji": "🧂"},
+    "personal_hygiene": {"en": "Personal care",   "price": 15.00, "emoji": "🧴"},
+    "tissue":           {"en": "Tissues",         "price": 8.00,  "emoji": "🧻"},
+    "stationery":       {"en": "Stationery",      "price": 10.00, "emoji": "✏️"},
 }
 
 T = {
@@ -67,26 +67,6 @@ T = {
         "thank_you": "Thank you for shopping.",
         "tagline_receipt": "AI-Powered Smart Checkout",
         "print": "Print receipt",
-    },
-    "ar": {
-        "title": "افحص السلة",
-        "tagline": "ارفع صورة أو اختر عيّنة، وكل منتج ينكشف وينحسب ويتسعّر.",
-        "image_label": "ارفع صورة",
-        "confidence": "حد الثقة",
-        "store": "اسم المتجر",
-        "vat": "إضافة ضريبة القيمة المضافة (15٪)",
-        "scan": "ابدأ الفحص وأنشئ الفاتورة",
-        "detections": "الاكتشافات",
-        "samples": "جرّب عيّنة عشوائية",
-        "shuffle": "خلط العيّنات",
-        "prices_label": "قائمة الأسعار",
-        "no_items": "لم يتم اكتشاف أي منتج. جرّب تخفيض حد الثقة.",
-        "detected_count": "تم اكتشاف {n} منتج عبر {k} فئة.",
-        "subtotal": "المجموع الفرعي", "vat_label": "ضريبة القيمة المضافة (15٪)", "total": "الإجمالي",
-        "currency": "ر.س", "invoice": "فاتورة",
-        "thank_you": "شكراً لتسوقكم.",
-        "tagline_receipt": "نظام كاشير ذكي بالذكاء الاصطناعي",
-        "print": "طباعة الفاتورة",
     },
 }
 
@@ -113,7 +93,7 @@ def pick_random_samples(n=3):
 def build_cart(detections):
     cart = {}
     for cls in detections:
-        info = CATEGORY_PRICES.get(cls, {"ar": cls, "en": cls, "price": 0.0, "emoji": "📦"})
+        info = CATEGORY_PRICES.get(cls, {"en": cls, "price": 0.0, "emoji": "📦"})
         if cls not in cart:
             cart[cls] = {"info": info, "count": 0}
         cart[cls]["count"] += 1
@@ -156,10 +136,10 @@ PRINT_JS = (
 )
 
 
-def render_receipt(cart, store_name, show_vat, lang):
-    txt = T[lang]
-    direction = "rtl" if lang == "ar" else "ltr"
-    label = (lambda info: info["ar"]) if lang == "ar" else (lambda info: info["en"])
+def render_receipt(cart, store_name, show_vat):
+    txt = T["en"]
+    direction = "ltr"
+    label = lambda info: info["en"]
 
     subtotal = sum(it["info"]["price"] * it["count"] for it in cart.values())
     vat = subtotal * 0.15 if show_vat else 0
@@ -373,8 +353,8 @@ def _badge(label, conf):
             f'<span class="vc-badge-n">{int(conf * 100)}%</span></span>')
 
 
-def predict(image, conf, store_name, show_vat, lang):
-    txt = T[lang]
+def predict(image, conf, store_name, show_vat):
+    txt = T["en"]
     if image is None:
         return None, "", ""
 
@@ -395,7 +375,7 @@ def predict(image, conf, store_name, show_vat, lang):
     if not above and not below:
         return annotated, f'<p class="vc-empty">{txt["no_items"]}</p>', ""
 
-    label = (lambda info: info["ar"]) if lang == "ar" else (lambda info: info["en"])
+    label = lambda info: info["en"]
     cart = build_cart([d["cls"] for d in above])
     n_items = sum(it["count"] for it in cart.values())
 
@@ -416,13 +396,13 @@ def predict(image, conf, store_name, show_vat, lang):
     summary = (f'<p class="vc-count">'
                f'{txt["detected_count"].format(n=n_items, k=len(cart))}</p>'
                f'<div class="vc-chips">{chips}{badges}</div>{note}')
-    receipt = render_receipt(cart, store_name, show_vat, lang)
+    receipt = render_receipt(cart, store_name, show_vat)
     return annotated, summary, receipt
 
 
-def price_list_markdown(lang):
-    label = (lambda info: info["ar"]) if lang == "ar" else (lambda info: info["en"])
-    cur = T[lang]["currency"]
+def price_list_markdown():
+    label = lambda info: info["en"]
+    cur = T["en"]["currency"]
     rows = [f"| | | |", "|---|---|---|"]
     for info in CATEGORY_PRICES.values():
         rows.append(f"| {info['emoji']} | {label(info)} | **{info['price']:.2f} {cur}** |")
@@ -558,7 +538,7 @@ LANDING_HTML = load_landing_html()
 # UI
 # ---------------------------------------------------------------------------
 CUSTOM_CSS = """
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap");
 
 :root, .gradio-container {
   --vc-blush:#F7DFD9; --vc-cream:#FFF4EF; --vc-forest:#1E5140; --vc-forest-deep:#143A2D;
@@ -614,9 +594,6 @@ body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
 #vc-band .vc-mark { color: var(--vc-cream); font-family: "Bricolage Grotesque", sans-serif;
   font-weight: 800; font-size: 18px; letter-spacing: -.035em; }
 #vc-band .block, #vc-band .form { background: transparent !important; border: none !important; }
-.lang-toggle button { min-width: 84px; background: transparent !important;
-  color: var(--vc-cream) !important; border: 1px solid rgba(255,244,239,.4) !important; }
-.lang-toggle button:hover { background: rgba(255,244,239,.12) !important; }
 
 .vc-eyebrow { display: block; color: var(--vc-moss); font-size: 13px; font-weight: 500;
   margin: 0 0 10px; }
@@ -694,17 +671,7 @@ body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
 #scanner .table-wrap, #scanner table { background:#fff !important; color: var(--vc-forest-deep) !important; }
 
 
-/* RTL mode */
-.rtl-mode, .rtl-mode * { direction: rtl !important; }
-.rtl-mode .gradio-container,
-.rtl-mode label,
-.rtl-mode .markdown,
-.rtl-mode .prose { text-align: right !important; }
 
-/* In RTL the labels reorder via direction:rtl (max on left, min on right).
-   Flip the range track horizontally so the orange fill grows from the "0" side
-   toward the thumb, and dragging LEFT increases the value. */
-.rtl-mode .slider_input_container input[type="range"] { transform: scaleX(-1); }
 
 /* Last word on text blocks: the dark-mode neutralisation above also forces a
    white card background, so these have to come last and cover .dark too. */
@@ -754,8 +721,6 @@ body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
 #vc-threshold .block, .dark #vc-threshold .block, #vc-threshold .form {
   background: transparent !important; box-shadow: none !important; border: none !important; }
 
-/* Language toggle stays a compact pill instead of stretching across the band. */
-#vc-band .lang-toggle { flex: 0 0 auto !important; min-width: 0 !important; width: auto !important; }
 
 /* Empty results read as a deliberate drop zone, not a blank white slab. */
 #vc-annotated:not(:has(img)), .dark #vc-annotated:not(:has(img)) {
@@ -767,28 +732,6 @@ body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
 /* Gradio's own footer (API / built-with links) is noise in a product demo. */
 footer { display: none !important; }
 """
-
-
-def toggle_lang(lang):
-    new_lang = "ar" if lang == "en" else "en"
-    t = T[new_lang]
-    btn_label = "AR 🌐" if new_lang == "en" else "EN 🌐"
-    rtl_class = "rtl-mode" if new_lang == "ar" else ""
-    return (
-        new_lang,
-        gr.update(value=btn_label),
-        gr.update(value=f"<h2>{t['title']}</h2><p class='vc-lede'>{t['tagline']}</p>"),
-        gr.update(label=t["image_label"]),
-        gr.update(label=t["confidence"]),
-        gr.update(label=t["store"]),
-        gr.update(label=t["vat"]),
-        gr.update(value=t["scan"]),
-        gr.update(label=t["detections"]),
-        gr.update(label=t["samples"]),
-        gr.update(value=t["shuffle"]),
-        gr.update(label=t["prices_label"], value=price_list_markdown(new_lang)),
-        gr.update(elem_classes=[rtl_class] if rtl_class else []),
-    )
 
 
 def open_sample(path):
@@ -835,7 +778,6 @@ VC_THEME = gr.themes.Soft(
 
 with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME, head=STRIP_JS,
                title="Vision Checkout", fill_width=True) as demo:
-    lang_state = gr.State("en")
     samples_state = gr.State(pick_random_samples(3))
 
     if LANDING_HTML:
@@ -846,10 +788,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME, head=STRIP_JS,
     with root:
         # Header band — the forest strip that ties the tool to the poster.
         with gr.Row(elem_id="vc-band"):
-            with gr.Column(scale=6, min_width=200):
-                gr.HTML("<span class='vc-mark'>Vision Checkout</span>")
-            with gr.Column(scale=1, min_width=110, elem_classes=["lang-toggle"]):
-                lang_btn = gr.Button("AR 🌐", size="sm")
+            gr.HTML("<span class='vc-mark'>Vision Checkout</span>")
 
         header_md = gr.Markdown(
             f"<h2>{T['en']['title']}</h2>"
@@ -884,7 +823,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME, head=STRIP_JS,
                 scan_btn = gr.Button(T["en"]["scan"], variant="primary")
 
                 with gr.Accordion(T["en"]["prices_label"], open=False) as prices_acc:
-                    prices_md = gr.Markdown(price_list_markdown("en"))
+                    prices_md = gr.Markdown(price_list_markdown())
 
             # ── RIGHT: results, wide ──
             with gr.Column(scale=2, elem_id="vc-results"):
@@ -899,16 +838,8 @@ with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME, head=STRIP_JS,
     # ── wiring ──
     scan_btn.click(
         predict,
-        inputs=[image_in, conf_slider, store_in, vat_in, lang_state],
+        inputs=[image_in, conf_slider, store_in, vat_in],
         outputs=[annotated_out, summary_out, receipt_out],
-    )
-
-    lang_btn.click(
-        toggle_lang,
-        inputs=[lang_state],
-        outputs=[lang_state, lang_btn, header_md, image_in, conf_slider, store_in,
-                 vat_in, scan_btn, annotated_out, samples_gallery, shuffle_btn,
-                 prices_md, root],
     )
 
     shuffle_btn.click(shuffle_samples, outputs=[samples_gallery, samples_state])

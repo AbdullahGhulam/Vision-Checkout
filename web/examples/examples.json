@@ -1,37 +1,14 @@
 [
   {
     "file": "ex_01.jpg",
-    "source": "5.jpg",
-    "invoice": "VC-3017",
-    "n": 11,
-    "categories": 1,
-    "items": [
-      {
-        "key": "drink",
-        "en": "Drinks",
-        "ar": "مشروبات",
-        "count": 11,
-        "price": 3.5
-      }
-    ],
-    "subtotal": 38.5,
-    "vat": 5.77,
-    "total": 44.27,
-    "credit": null,
-    "license": null,
-    "url": null
-  },
-  {
-    "file": "ex_02.jpg",
     "source": "2.jpg",
-    "invoice": "VC-3034",
+    "invoice": "VC-3017",
     "n": 3,
     "categories": 1,
     "items": [
       {
         "key": "milk",
         "en": "Milk",
-        "ar": "حليب",
         "count": 3,
         "price": 9.0
       }
@@ -44,30 +21,27 @@
     "url": null
   },
   {
-    "file": "ex_03.jpg",
+    "file": "ex_02.jpg",
     "source": "WhatsApp Image 2026-05-12 at 2.18.56 PM.jpeg",
-    "invoice": "VC-3051",
+    "invoice": "VC-3034",
     "n": 4,
     "categories": 3,
     "items": [
       {
         "key": "drink",
         "en": "Drinks",
-        "ar": "مشروبات",
         "count": 2,
         "price": 3.5
       },
       {
         "key": "dessert",
         "en": "Dessert",
-        "ar": "حلويات",
         "count": 1,
         "price": 4.0
       },
       {
         "key": "candy",
         "en": "Candy",
-        "ar": "حلوى",
         "count": 1,
         "price": 3.0
       }
@@ -80,16 +54,15 @@
     "url": null
   },
   {
-    "file": "ex_04.jpg",
+    "file": "ex_03.jpg",
     "source": "p03_44.png",
-    "invoice": "VC-3068",
+    "invoice": "VC-3051",
     "n": 2,
     "categories": 1,
     "items": [
       {
         "key": "dessert",
         "en": "Dessert",
-        "ar": "حلويات",
         "count": 2,
         "price": 4.0
       }
@@ -102,16 +75,15 @@
     "url": null
   },
   {
-    "file": "ex_05.jpg",
+    "file": "ex_04.jpg",
     "source": "6.jpg",
-    "invoice": "VC-3085",
+    "invoice": "VC-3068",
     "n": 2,
     "categories": 1,
     "items": [
       {
         "key": "puffed_food",
         "en": "Puffed snacks",
-        "ar": "وجبات خفيفة",
         "count": 2,
         "price": 6.5
       }
@@ -124,16 +96,15 @@
     "url": null
   },
   {
-    "file": "ex_06.jpg",
+    "file": "ex_05.jpg",
     "source": "7eb88ee9.jpg",
-    "invoice": "VC-3102",
+    "invoice": "VC-3085",
     "n": 2,
     "categories": 1,
     "items": [
       {
         "key": "instant_noodles",
         "en": "Instant noodles",
-        "ar": "نودلز سريع",
         "count": 2,
         "price": 4.5
       }

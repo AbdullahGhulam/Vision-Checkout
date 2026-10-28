@@ -130,8 +130,8 @@ def main():
         counts = Counter(cls for _, cls in raw)
         items = []
         for cls, n in counts.most_common():
-            info = app.CATEGORY_PRICES.get(cls, {"en": cls, "ar": cls, "price": 0.0})
-            items.append({"key": cls, "en": info["en"], "ar": info["ar"],
+            info = app.CATEGORY_PRICES.get(cls, {"en": cls, "price": 0.0})
+            items.append({"key": cls, "en": info["en"],
                           "count": n, "price": info["price"]})
         subtotal = round(sum(it["count"] * it["price"] for it in items), 2)
         vat = round(subtotal * 0.15, 2)
