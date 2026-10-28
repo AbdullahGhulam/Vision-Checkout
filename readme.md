@@ -1,56 +1,89 @@
+# Vision Checkout
 
-# VisionCheckout-RPC 
+An automated self-checkout system that detects and classifies retail products from a single image and generates a receipt automatically. Built on the **Retail Product Checkout (RPC)** dataset and fine-tuned on a **custom Saudi retail dataset** to perform well on local products.
 
-An automated product recognition system designed to simulate the retail checkout process. This project utilizes the **Retail Product Checkout (RPC)** dataset to identify multiple items in a single frame, providing a foundation for "just-walk-out" shopping technology.
+🔗 **Live Demo:** [Hugging Face Space](https://huggingface.co/spaces/Almo7tarif/vision-checkout)
+
+---
 
 ## Overview
-The goal of this project is to build a robust computer vision pipeline that can:
-1. Detect multiple products in a retail environment.
-2. Classify items based on the RPC dataset categories.
-3. Simulate a checkout receipt based on recognized items.
+Standard detectors struggle with visually similar products, occlusion, and varying lighting at checkout counters, and global datasets don't represent Saudi products. This project builds a complete pipeline that:
+1. Detects multiple products in a single image.
+2. Classifies them into 17 retail categories adapted to the Saudi market.
+3. Generates a digital receipt with quantities, prices, and VAT.
 
-## Dataset
-We use the **[RPC (Retail Product Checkout) Dataset](https://rpc-dataset.github.io/)**, which contains:
-* **200** product categories.
-* Thousands of high-resolution images across different lighting and clutter levels.
-* Single-item (exemplar) and multi-item (checkout) images.
+## Datasets
+| Dataset | Description |
+|---|---|
+| [RPC Dataset](https://rpc-dataset.github.io/) | 80,000+ images, 200 product classes. Used for initial training. |
+| Saudi Local Dataset | 857 images of local Saudi brands, **manually annotated** using Roboflow. Used for fine-tuning. |
+
+## Methodology
+**1. Data Engineering**
+- Converted annotations from COCO to YOLO format.
+- Applied augmentations (Gaussian Blur, Brightness/Contrast, Mosaic, CoarseDropout, Mixup, HSV) to simulate real checkout conditions: blur, harsh lighting, and occlusion.
+
+**2. Two-Stage Training with YOLO26m**
+- **Stage 1:** Trained on the RPC dataset to build a strong feature-extraction backbone.
+- **Stage 2:** Fine-tuned on a hybrid dataset (RPC subset + Saudi data), remapping 200 classes into 17, freezing the backbone (`freeze=8`), and using oversampling to handle class imbalance.
+
+**3. Training Environment**
+- Google Colab Enterprise with NVIDIA RTX PRO 6000 (172GB RAM).
+- AdamW optimizer, batch size 128, image size 640, early stopping (patience=20).
+
+## Results
+| Model | mAP50 | Precision | Recall | F1 |
+|---|---|---|---|---|
+| YOLO11 (baseline) | 37.0% | 39.0% | 43.1% | 40.9% |
+| **YOLO26m (fine-tuned)** | **46.4%** | **61.8%** | 41.8% | **49.9%** |
+
+### Bounding Box Detection
+![Bounding Boxes](assests/bounding_boxes.png)
+
+### Data Augmentation Examples
+![Data Augmentation](assests/Augmentation.jpeg)
+
+### Labeled Products
+![Labels](assests/lables.jpg)
+
+## Deployment
+Deployed on **Hugging Face Spaces** using **Gradio** (Streamlit was tested first but degraded inference quality). Features:
+- Image upload or random sample selection
+- Adjustable confidence threshold
+- Real-time detection with bounding boxes
+- Automatic receipt generation with price mapping and VAT
+
+## Limitations
+- Accuracy drops when products are heavily stacked or overlapping.
+- 17 broad categories cannot yet distinguish between brands of the same product type.
 
 ## Tech Stack
-* **Language:** Python 3.11.9 (this Version Specifically to avoid compatibality issues)
-* **Frameworks:** PyTorch 
-* **Libraries:** OpenCV, NumPy, Matplotlib
-* **Version Control:** Git & GitHub
+* **Language:** Python 3.11.9
+* **Deep Learning:** PyTorch, Ultralytics YOLO26
+* **Data:** Albumentations, OpenCV, Pandas, NumPy, Matplotlib, Roboflow
+* **Deployment:** Gradio, Hugging Face Spaces
+* **Tools:** Git, GitHub, Google Colab Enterprise
 
 ## Setup & Installation
-
-1.  **Clone the repository:**
+1. **Clone the repository:**
     ```bash
     git clone https://github.com/Abdullah-Ghulam/Vision-Checkout
-    cd VisionCheckout
+    cd Vision-Checkout
     ```
-
-2.  **Create a Virtual Environment:**
+2. **Create and activate a virtual environment:**
     ```bash
-    #this creates a new environment (run it only ONCE)
     python -m venv venv
-
-    #after that activate the environement using:
-    source venv/bin/activate  # Linux/macOS
-    # venv\Scripts\activate  # Windows
+    source venv/bin/activate   # Linux/macOS
+    # venv\Scripts\activate    # Windows
     ```
-
-3.  **Install Dependencies:**
+3. **Install dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
-
-4.  **Verify Installation**  
-After installing the requirements,
-run the following script to ensure your environment (Python, PyTorch, and GPU) is configured correctly:
-
-```bash
-python check_setup.py
-```
+4. **Verify installation (Python, PyTorch, GPU):**
+    ```bash
+    python check_setup.py
+    ```
 
 ## Project Structure
 ```text
@@ -72,13 +105,3 @@ Vision_Checkout
 └── README.md           # Project documentation and setup instructions
 ```
 
-## Results & Visualizations
-
-### Bounding Box Detection
-![Bounding Boxes](assests/bounding_boxes.png)
-
-### Data Augmentation Examples
-![Data Augmentation](assests/Augmentation.jpeg)
-
-### Labeled Products
-![Labels](assests/lables.jpg)
