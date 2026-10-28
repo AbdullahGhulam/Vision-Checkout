@@ -2,6 +2,7 @@
 
 Single-file Gradio app: upload a tray photo, run YOLO detection, generate a receipt.
 """
+import json
 import random
 from datetime import datetime
 from pathlib import Path
@@ -48,8 +49,8 @@ CATEGORY_PRICES = {
 
 T = {
     "en": {
-        "title": "Vision Checkout",
-        "tagline": "Smart AI cashier — upload a tray photo and get a receipt.",
+        "title": "Scan a cart",
+        "tagline": "Upload a photo or pick a sample. Every product is found, counted and priced.",
         "image_label": "Upload image",
         "confidence": "Confidence threshold",
         "store": "Store name",
@@ -68,8 +69,8 @@ T = {
         "print": "Print receipt",
     },
     "ar": {
-        "title": "الكاشير الذكي",
-        "tagline": "ارفع صورة المنتجات واحصل على الفاتورة فوراً.",
+        "title": "افحص السلة",
+        "tagline": "ارفع صورة أو اختر عيّنة، وكل منتج ينكشف وينحسب ويتسعّر.",
         "image_label": "ارفع صورة",
         "confidence": "حد الثقة",
         "store": "اسم المتجر",
@@ -434,16 +435,66 @@ def price_list_markdown(lang):
 WEB_DIR = BASE_DIR / "web"
 
 
-def _asset_url(name):
-    """Serve the illustration as a static file.
+def _asset_url(name, folder="assets"):
+    """Serve landing images as static files.
 
     These were inlined as base64 data URIs, which pushed ~740KB into the Gradio
     config payload and stopped event handlers binding once deployed. Serving
     them through Gradio's file route keeps the config small.
     """
-    if not (WEB_DIR / "assets" / name).exists():
+    if not (WEB_DIR / folder / name).exists():
         return ""
-    return "/gradio_api/file=web/assets/" + name
+    return f"/gradio_api/file=web/{folder}/{name}"
+
+
+SCAN_ICON = ('<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+             'stroke-width="2" stroke-linecap="round" aria-hidden="true">'
+             '<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3'
+             'M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 12h8"/></svg>')
+
+
+def render_examples():
+    """Cards for the example strip, built from scripts/build_examples.py output."""
+    path = WEB_DIR / "examples" / "examples.json"
+    if not path.exists():
+        return ""
+    cards = []
+    for i, ex in enumerate(json.loads(path.read_text(encoding="utf-8"))):
+        rows = "".join(
+            f'<div class="ex-row"><span>{it["en"]}'
+            f'{" &times;" + str(it["count"]) if it["count"] > 1 else ""}</span>'
+            f'<span>{it["count"] * it["price"]:.2f}</span></div>'
+            for it in ex["items"][:3]
+        )
+        extra = len(ex["items"]) - 3
+        more = f'<div class="ex-more">+{extra} more</div>' if extra > 0 else ""
+        cats = f'{ex["categories"]} {"category" if ex["categories"] == 1 else "categories"}'
+        credit = ""
+        if ex.get("credit"):
+            credit = (f'<a class="ex-credit" href="{ex["url"]}" target="_blank" rel="noopener">'
+                      f'Photo: {ex["credit"]} &middot; {ex["license"]} &middot; boxes added</a>')
+        cards.append(
+            f'<article class="ex" tabindex="0" aria-label="{ex["n"]} items, total SAR {ex["total"]:.2f}">'
+            f'<div class="ex-media"><img src="{_asset_url(ex["file"], "examples")}" '
+            f'alt="Model output: {ex["n"]} products detected" width="960" height="720" '
+            f'loading="{"eager" if i < 3 else "lazy"}" decoding="async" draggable="false">'
+            f'<span class="ex-pill">{SCAN_ICON}<span>{ex["n"]} items detected</span></span></div>'
+            f'<div class="ex-receipt"><div class="ex-head"><span>{ex["invoice"]}</span>'
+            f'<span>{cats}</span></div>{rows}{more}'
+            f'<div class="ex-total"><span>Total incl. VAT</span>'
+            f'<span>SAR {ex["total"]:.2f}</span></div>{credit}</div></article>'
+        )
+    return "".join(cards)
+
+
+def render_categories():
+    chips = []
+    for info in CATEGORY_PRICES.values():
+        if info["price"] > 0:
+            chips.append(f'<span class="cat">{info["en"]}<i>{info["price"]:.2f}</i></span>')
+        else:
+            chips.append(f'<span class="cat off">{info["en"]}<i>not sold</i></span>')
+    return "".join(chips)
 
 
 def load_landing_html():
@@ -453,8 +504,52 @@ def load_landing_html():
     return (
         html_path.read_text(encoding="utf-8")
         .replace("__CART_IMG__", _asset_url("illustration-cart.png"))
-        .replace("__PRODUCE_IMG__", _asset_url("illustration-trolley-produce.png"))
+        .replace("__EXAMPLES__", render_examples())
+        .replace("__CATEGORIES__", render_categories())
     )
+
+
+# Autoplay and mouse-drag for the example strip. gr.HTML does not run <script>
+# tags, so this goes in <head>; it polls until Gradio has rendered the strip.
+# Without it the strip still works: native swipe/scroll and the arrow buttons.
+STRIP_JS = """
+<script>
+(function () {
+  function bind() {
+    var t = document.getElementById('ex-track');
+    if (!t || t.dataset.bound) return;
+    t.dataset.bound = '1';
+    var hold = false, drag = null;
+    ['mouseenter', 'focusin'].forEach(function (e) { t.addEventListener(e, function () { hold = true; }); });
+    ['mouseleave', 'focusout'].forEach(function (e) { t.addEventListener(e, function () { hold = false; }); });
+    t.addEventListener('touchstart', function () { hold = true; }, { passive: true });
+    t.addEventListener('touchend', function () { setTimeout(function () { hold = false; }, 5000); }, { passive: true });
+    t.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      drag = { x: e.clientX, left: t.scrollLeft };
+      t.classList.add('dragging');
+    });
+    window.addEventListener('pointermove', function (e) {
+      if (drag) t.scrollLeft = drag.left - (e.clientX - drag.x);
+    });
+    window.addEventListener('pointerup', function () {
+      if (!drag) return;
+      drag = null;
+      t.classList.remove('dragging');
+    });
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    setInterval(function () {
+      if (hold || drag || document.hidden) return;
+      var c = t.querySelector('.ex');
+      if (!c) return;
+      if (t.scrollLeft + t.clientWidth >= t.scrollWidth - 8) t.scrollTo({ left: 0, behavior: 'smooth' });
+      else t.scrollBy({ left: c.offsetWidth + 22, behavior: 'smooth' });
+    }, 3600);
+  }
+  setInterval(bind, 700);
+})();
+</script>
+"""
 
 
 LANDING_HTML = load_landing_html()
@@ -631,6 +726,46 @@ body, gradio-app, .gradio-container { background: var(--vc-blush) !important; }
   font-weight: 500 !important; padding-left: 0 !important; }
 #scanner [data-testid="block-label"] svg {
   color: var(--vc-moss) !important; opacity: .6; }
+
+/* ── Scanner polish ──────────────────────────────────────────────────────── */
+/* Sample gallery: rounded tiles in a tidy row, not floating circles. The
+   gallery shrink-wraps by default (it measured 104px wide), so every level
+   has to be told to fill before the tiles can size off it. */
+#scanner .gallery { width: 100% !important; display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 10px !important; }
+#scanner .gallery-item { width: 100% !important; display: block !important;
+  padding: 0 !important; border: none !important; background: none !important; }
+#scanner .gallery-item .container { display: block !important; width: 100% !important;
+  height: auto !important; aspect-ratio: 1 / 1; overflow: hidden;
+  border-radius: 18px !important; border: none !important; }
+#scanner .gallery-item img { width: 100% !important; height: 100% !important;
+  max-width: none !important; object-fit: cover; border-radius: 0 !important;
+  transition: transform 300ms cubic-bezier(.22,.61,.36,1); }
+#scanner .gallery-item:hover img { transform: scale(1.05); }
+
+/* Gradio paints grouped fields' gaps with a .styler background (#EBCFC6),
+   which showed up as pink boxes in the threshold panel and between fields. */
+#vc-input .styler, #vc-threshold .styler { background: transparent !important; }
+#vc-input .styler { gap: 12px !important; }
+#scanner .form, .dark #scanner .form { background: transparent !important;
+  border: none !important; box-shadow: none !important; gap: 12px !important; }
+
+/* Threshold: the slider sits directly on the sage panel, no white card inside. */
+#vc-threshold .block, .dark #vc-threshold .block, #vc-threshold .form {
+  background: transparent !important; box-shadow: none !important; border: none !important; }
+
+/* Language toggle stays a compact pill instead of stretching across the band. */
+#vc-band .lang-toggle { flex: 0 0 auto !important; min-width: 0 !important; width: auto !important; }
+
+/* Empty results read as a deliberate drop zone, not a blank white slab. */
+#vc-annotated:not(:has(img)), .dark #vc-annotated:not(:has(img)) {
+  background: #FBEFEA !important; border: 1.5px dashed #EBCFC6 !important; }
+#vc-annotated:not(:has(img))::after {
+  content: "Your scan will appear here"; position: absolute; left: 50%; top: 56%;
+  transform: translateX(-50%); color: #4C7A66; font-size: 15px; white-space: nowrap; }
+
+/* Gradio's own footer (API / built-with links) is noise in a product demo. */
+footer { display: none !important; }
 """
 
 
@@ -698,7 +833,7 @@ VC_THEME = gr.themes.Soft(
     font=[gr.themes.GoogleFont("Instrument Sans"), "system-ui", "sans-serif"],
 )
 
-with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME,
+with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME, head=STRIP_JS,
                title="Vision Checkout", fill_width=True) as demo:
     lang_state = gr.State("en")
     samples_state = gr.State(pick_random_samples(3))
@@ -755,7 +890,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=VC_THEME,
             with gr.Column(scale=2, elem_id="vc-results"):
                 gr.HTML("<span class='vc-eyebrow'>Results</span>")
                 annotated_out = gr.Image(label=T["en"]["detections"], height=430,
-                                         interactive=False)
+                                         interactive=False, elem_id="vc-annotated")
                 summary_out = gr.HTML()
                 receipt_out = gr.HTML()
 

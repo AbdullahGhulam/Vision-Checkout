@@ -61,16 +61,67 @@
   font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
 #vc-landing .arrow{color:var(--persimmon);font-size:18px;line-height:1}
 
-/* What it reads: tight two-column, short copy, image carries the section. */
-#vc-landing .trolley{background:var(--mustard-wash);border-radius:var(--radius-xl);padding:36px 40px;display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:36px;align-items:center}
-#vc-landing .trolley h2{font-size:clamp(26px,2.4vw,34px);line-height:1.1}
-#vc-landing .trolley p{color:var(--moss);font-size:16px;max-width:52ch}
-#vc-landing .chips{display:flex;flex-wrap:wrap;gap:7px}
-#vc-landing .chip{background:var(--persimmon-wash);color:var(--persimmon-deep);border-radius:var(--radius-pill);
-  padding:7px 14px;font-size:13.5px;font-weight:500}
-#vc-landing .crop{width:100%;aspect-ratio:5/4;max-height:300px;border-radius:var(--radius-lg);overflow:hidden;background:var(--cream)}
-#vc-landing .crop img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+/* Example strip: real model output, one card per cart. Scrolls natively
+   (swipe, trackpad), snaps per card, and autoplays via the script in <head>. */
+#vc-landing .ex-sec{display:flex;flex-direction:column;gap:26px}
+#vc-landing .ex-top{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+#vc-landing .ex-top h2{font-size:clamp(28px,3.1vw,46px);line-height:1.08;letter-spacing:-.035em;max-width:26ch}
+#vc-landing .ex-top h2 .mute{color:var(--moss);opacity:.7}
+#vc-landing .ex-arrows{display:flex;gap:10px;flex:none}
+#vc-landing .ex-arrow{width:52px;height:52px;border-radius:var(--radius-pill);border:1px solid #E4CFC5;
+  background:var(--cream);color:var(--forest-deep);display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;padding:0;transition:background .16s,transform .16s}
+#vc-landing .ex-arrow:hover{background:#fff;transform:translateY(-1px)}
+#vc-landing .ex-track{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  padding:8px 2px 22px;margin:-8px 0 -22px;scrollbar-width:none;cursor:grab;user-select:none;
+  -webkit-mask-image:linear-gradient(90deg,#000 0,#000 90%,transparent);
+  mask-image:linear-gradient(90deg,#000 0,#000 90%,transparent)}
+#vc-landing .ex-track::-webkit-scrollbar{display:none}
+#vc-landing .ex-track.dragging{scroll-snap-type:none;scroll-behavior:auto;cursor:grabbing}
+#vc-landing .ex{flex:0 0 clamp(290px,31vw,500px);scroll-snap-align:start;background:var(--cream);
+  border-radius:var(--radius-lg);overflow:hidden;outline:none;
+  box-shadow:0 1px 0 rgba(20,58,45,.05),0 18px 40px -30px rgba(20,58,45,.5);
+  transition:transform .4s cubic-bezier(.22,.61,.36,1),box-shadow .4s}
+#vc-landing .ex:hover,#vc-landing .ex:focus-visible{transform:translateY(-6px);
+  box-shadow:0 1px 0 rgba(20,58,45,.05),0 26px 50px -28px rgba(20,58,45,.6)}
+#vc-landing .ex-media{position:relative;aspect-ratio:4/3;overflow:hidden;background:#E9E2DB}
+#vc-landing .ex-media img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none;
+  transition:transform .7s cubic-bezier(.22,.61,.36,1)}
+#vc-landing .ex:hover .ex-media img{transform:scale(1.045)}
+#vc-landing .ex-pill{position:absolute;left:16px;bottom:16px;display:inline-flex;align-items:center;gap:8px;
+  padding:9px 15px 9px 12px;border-radius:var(--radius-pill);background:rgba(20,58,45,.68);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--cream);font-size:14px;
+  font-weight:500;border:1px solid rgba(255,244,239,.22)}
+#vc-landing .ex{display:flex;flex-direction:column}
+#vc-landing .ex-pill,#vc-landing .ex-pill span,#vc-landing .ex-pill svg{color:#FFF4EF!important}
+#vc-landing .ex-receipt{padding:16px 22px 20px;display:flex;flex-direction:column;gap:5px;flex:1}
+#vc-landing .ex-head{display:flex;justify-content:space-between;font-size:12.5px;color:var(--moss);
+  padding-bottom:10px;margin-bottom:5px;border-bottom:1px dashed #E4CFC5;font-variant-numeric:tabular-nums}
+#vc-landing .ex-row{display:flex;justify-content:space-between;gap:14px;font-size:14.5px;font-variant-numeric:tabular-nums}
+#vc-landing .ex-more{font-size:12.5px;color:var(--moss)}
+#vc-landing .ex-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:auto;
+  padding-top:11px;border-top:1px solid #E4CFC5}
+#vc-landing .ex-total span:first-child{font-size:13px;color:var(--moss);font-weight:500}
+#vc-landing .ex-total span:last-child{font-size:20px;font-weight:600;color:var(--persimmon-deep);
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+#vc-landing .ex-credit{font-size:11.5px;color:var(--moss);opacity:.8;margin-top:8px;text-decoration:none}
+#vc-landing .ex-credit:hover{text-decoration:underline}
+
+/* What it reads: the model's real 17 categories, each with its shelf price. */
+#vc-landing .reads{background:var(--mustard-wash);border-radius:var(--radius-xl);padding:38px 42px;display:grid;
+  grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:40px;align-items:center}
+#vc-landing .reads h2{font-size:clamp(26px,2.4vw,34px);line-height:1.1}
+#vc-landing .reads p{color:var(--moss);font-size:16px;max-width:44ch;margin-top:14px}
+#vc-landing .stats{display:flex;gap:30px;margin-top:22px}
+#vc-landing .stats b{display:block;font-family:var(--font-display);font-weight:800;font-size:30px;letter-spacing:-.03em;line-height:1}
+#vc-landing .stats span{font-size:13px;color:var(--moss)}
+#vc-landing .cats{display:flex;flex-wrap:wrap;gap:8px}
+#vc-landing .cat{display:inline-flex;align-items:center;gap:10px;background:var(--cream);border-radius:var(--radius-pill);
+  padding:7px 7px 7px 16px;font-size:14px;font-weight:500}
+#vc-landing .cat i{font-style:normal;font-size:12.5px;background:var(--persimmon-wash);color:var(--persimmon-deep);
+  border-radius:var(--radius-pill);padding:3px 10px;font-variant-numeric:tabular-nums}
+#vc-landing .cat.off i{background:#EFE6DF;color:var(--moss)}
 
 #vc-landing .closer{background:var(--forest);border-radius:var(--radius-xl);padding:36px 40px;display:flex;
   align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
@@ -81,13 +132,15 @@
 #vc-landing .foot a{color:inherit}
 
 @media(max-width:1000px){
-  #vc-landing .hero,#vc-landing .trolley{grid-template-columns:1fr}
+  #vc-landing .hero,#vc-landing .reads{grid-template-columns:1fr}
+  #vc-landing .ex-top{flex-direction:column;align-items:flex-start}
   #vc-landing .flow{flex-direction:column;align-items:flex-start}
   #vc-landing .flowsteps{justify-content:flex-start}
 }
 @media(max-width:760px){
   #vc-landing{gap:32px}
-  #vc-landing .hero-copy,#vc-landing .trolley,#vc-landing .closer,#vc-landing .flow{padding:26px 22px}
+  #vc-landing .hero-copy,#vc-landing .reads,#vc-landing .closer,#vc-landing .flow{padding:26px 22px}
+  #vc-landing .ex{flex-basis:82vw}
 }
 
 /* Motion: the boxes draw in and breathe, the labels drift. Everything that
@@ -115,8 +168,9 @@
 <div class="nav">
   <span class="mark">Vision Checkout</span>
   <span style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
+    <a class="navlink" href="#examples">Examples</a>
     <a class="navlink" href="#how">How it works</a>
-    <a class="navlink" href="#trolley">What it reads</a>
+    <a class="navlink" href="#reads">What it reads</a>
     <a class="navlink solid" href="#scanner">Open the scanner</a>
   </span>
 </div>
@@ -150,6 +204,17 @@
   </div>
 </section>
 
+<section id="examples" class="ex-sec">
+  <div class="ex-top">
+    <h2>Real carts, real receipts.</h2>
+    <div class="ex-arrows">
+      <button class="ex-arrow" aria-label="Previous example" onclick="var t=document.getElementById('ex-track');var c=t.querySelector('.ex');t.scrollBy({left:-(c?c.offsetWidth+22:420),behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+      <button class="ex-arrow" aria-label="Next example" onclick="var t=document.getElementById('ex-track');var c=t.querySelector('.ex');t.scrollBy({left:(c?c.offsetWidth+22:420),behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </div>
+  </div>
+  <div class="ex-track" id="ex-track">__EXAMPLES__</div>
+</section>
+
 <section id="how" class="flow">
   <h2>How it works</h2>
   <div class="flowsteps">
@@ -161,16 +226,17 @@
   </div>
 </section>
 
-<section id="trolley" class="trolley">
-  <div style="display:flex;flex-direction:column;gap:16px">
-    <h2>Loose produce included.</h2>
-    <p>Barcodes are the easy part. The model reads what usually holds up a queue — bagged fruit, bunched herbs, bakery items, anything without a label.</p>
-    <div class="chips">
-      <span class="chip">Lettuce</span><span class="chip">Broccoli</span><span class="chip">Aubergine</span>
-      <span class="chip">Carrot</span><span class="chip">Tomatoes</span><span class="chip">Leek</span>
+<section id="reads" class="reads">
+  <div>
+    <h2>17 categories.<br>Priced the moment they&rsquo;re seen.</h2>
+    <p>Built on the RPC retail-checkout dataset and fine-tuned for products on Saudi shelves. Every category carries a shelf price, so each detection is already a line on the receipt.</p>
+    <div class="stats">
+      <div><b>17</b><span>categories</span></div>
+      <div><b>1</b><span>photo per cart</span></div>
+      <div><b>15%</b><span>VAT applied</span></div>
     </div>
   </div>
-  <div class="crop"><img src="__PRODUCE_IMG__" alt="Flat illustration of fresh produce around a shopping cart"></div>
+  <div class="cats">__CATEGORIES__</div>
 </section>
 
 <section class="closer">
@@ -180,6 +246,6 @@
 
 <div class="foot">
   <span>Vision Checkout — alpha</span>
-  <span>Illustrations via <a href="https://www.vecteezy.com">Vecteezy</a> and iconicbestiary / <a href="https://www.freepik.com">Freepik</a></span>
+  <span>Hero illustration via <a href="https://www.vecteezy.com">Vecteezy</a></span>
 </div>
 </div>
